@@ -7,7 +7,13 @@ const Coordinate = z.object({
 });
 
 const State = z.object({
-  player: Coordinate,
+  players: z.array(
+    z.object({
+      player: z.string(),
+      x: z.number(),
+      y: z.number(),
+    })
+  ),
   trees: z.array(Coordinate),
 });
 type State = z.infer<typeof State>;
@@ -17,21 +23,20 @@ pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
-import { Direction } from "./codegen/common.sol";
 import { Position, PositionData } from "./codegen/tables/Position.sol";
 
 contract MoveSystem is System {
-  function move(Direction direction) public {
+  function move(uint8 direction) public {
     address player = _msgSender();
     PositionData memory position = Position.get(player);
 
-    if (direction == Direction.North) {
+    if (direction == 0) {
       position.y += 1;
-    } else if (direction == Direction.East) {
+    } else if (direction == 1) {
       position.x += 1;
-    } else if (direction == Direction.South) {
+    } else if (direction == 2) {
       position.y -= 1;
-    } else if (direction == Direction.West) {
+    } else if (direction == 3) {
       position.x -= 1;
     }
 
@@ -41,7 +46,7 @@ contract MoveSystem is System {
 
 const Call = z.object({
   functionName: z.string(),
-  args: z.array(z.any()),
+  args: z.array(z.number()),
 });
 type Call = z.infer<typeof Call>;
 
@@ -51,19 +56,28 @@ const llm = new ChatAnthropic({
 }).withStructuredOutput(Call);
 
 export async function getAction(state: State) {
-  const content = `You are a player in a videogame. Here is the game state:
-  
-  ${JSON.stringify(state)}
+  const content = `Your task is to control a player in an onchain game. Given the current game state, a set of actions, and some goal, you must output the action you would take in the form of a function call, like so, without any additional comments.
 
-  The actions you can take are represented as functions on the following Solidity smart contract:
+{
+  functionName: string,
+  args: any[],
+}
 
-  <code>
-  ${contract}
-  </code>
+Your goal is to move to the closest tree.
   
-  Your goal is to move to the closest tree. Output the action you would take in the form of a function call, with the \`functionName\` and \`args\`, with any additional comments.`;
+Here is the game state:
+  
+${JSON.stringify(state)}
+
+Here are the actions you can take, represented as functions in a Solidity smart contract:
+
+\`\`\`solidity
+${contract}
+\`\`\``;
+  console.log(content);
 
   const call = await llm.invoke([content]);
+  console.log(call);
 
   return call;
 }

@@ -3,8 +3,8 @@ pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
-import { Direction } from "./codegen/common.sol";
 import { Position, PositionData } from "./codegen/tables/Position.sol";
+import { Direction } from "./codegen/common.sol";
 
 contract MoveSystem is System {
   function move(Direction direction) public {

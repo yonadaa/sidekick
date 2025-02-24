@@ -30,18 +30,17 @@ export function Agent() {
 
   async function onClick() {
     if (sync.data && worldContract && currentPlayer) {
-      const gameState = {
-        player: {
-          x: currentPlayer.x,
-          y: currentPlayer.y,
-        },
+      const state = {
+        players: players.map((player) => ({
+          player: player.player,
+          x: player.x,
+          y: player.y,
+        })),
         trees: TREES,
       };
-      const action = await getAction(gameState);
+      const action = await getAction(state);
 
-      const tx = await worldContract.write.app__move([
-        mudConfig.enums.Direction.indexOf(action.args[0]),
-      ]);
+      const tx = await worldContract.write.app__move([action.args[0]]);
       await sync.data.waitForTransaction(tx);
     }
   }
