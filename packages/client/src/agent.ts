@@ -25,18 +25,25 @@ import { System } from "@latticexyz/world/src/System.sol";
 
 import { Position, PositionData } from "./codegen/tables/Position.sol";
 
+enum Direction {
+  North,
+  East,
+  South,
+  West
+}
+
 contract MoveSystem is System {
-  function move(uint8 direction) public {
+  function move(Direction direction) public {
     address player = _msgSender();
     PositionData memory position = Position.get(player);
 
-    if (direction == 0) {
+    if (direction == Direction.North) {
       position.y += 1;
-    } else if (direction == 1) {
+    } else if (direction == Direction.East) {
       position.x += 1;
-    } else if (direction == 2) {
+    } else if (direction == Direction.South) {
       position.y -= 1;
-    } else if (direction == 3) {
+    } else if (direction == Direction.West) {
       position.x -= 1;
     }
 
@@ -46,38 +53,50 @@ contract MoveSystem is System {
 
 const Call = z.object({
   functionName: z.string(),
-  args: z.array(z.number()),
+  args: z.array(z.any()),
 });
-type Call = z.infer<typeof Call>;
+
+const Output = z.object({
+  chainOfThought: z.string(),
+  call: Call,
+});
 
 const llm = new ChatAnthropic({
   model: "claude-3-5-haiku-latest",
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-}).withStructuredOutput(Call);
+}).withStructuredOutput(Output);
 
 export async function getAction(state: State) {
-  const content = `Your task is to control a player in an onchain game. Given the current game state, a set of actions, and some goal, you must output the action you would take in the form of a function call, like so, without any additional comments.
+  const content = `Your task is to control a player in a game. This game is onchain, meaning the game logic is represented by a Solidity smart contract.
+Your task is to study the contract code and determine which function to call, with argument(s), given the current game state and some goal.
+
+Your output is an object with a \`chainOfThought\` key that explains your reasoning, and a function call, without any additional comments, like so:
+
 
 {
-  functionName: string,
-  args: any[],
+  chainOfThought: string;
+  call: {
+    functionName: string;
+    args: any[];
+  }
 }
 
-Your goal is to move to the closest tree.
-  
-Here is the game state:
-  
+Game state:
+
 ${JSON.stringify(state)}
 
-Here are the actions you can take, represented as functions in a Solidity smart contract:
+Smart contract functions:
 
 \`\`\`solidity
 ${contract}
-\`\`\``;
-  console.log(content);
+\`\`\`
 
-  const call = await llm.invoke([content]);
-  console.log(call);
+Your goal:
 
-  return call;
+Move towards the tree that is closest to the player.`;
+
+  const output = await llm.invoke([content]);
+  console.log(output);
+
+  return output.call;
 }

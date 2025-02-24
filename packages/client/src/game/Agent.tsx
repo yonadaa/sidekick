@@ -12,10 +12,10 @@ export const TREES = [
     x: 1,
     y: 4,
   },
-  // {
-  //   x: 5,
-  //   y: 7,
-  // },
+  {
+    x: 5,
+    y: 7,
+  },
 ];
 
 export function Agent() {
