@@ -7,6 +7,7 @@ import { Direction } from "../common";
 import mudConfig from "contracts/mud.config";
 import { AsyncButton } from "../ui/AsyncButton";
 import { useAccountModal } from "@latticexyz/entrykit/internal";
+import { Agent, TREES } from "./Agent";
 
 export type Props = {
   readonly players?: readonly {
@@ -35,7 +36,9 @@ const rotateClassName = {
 export function GameMap({ players = [], onMove }: Props) {
   const { openAccountModal } = useAccountModal();
   const { address: userAddress } = useAccount();
-  const currentPlayer = players.find((player) => player.player.toLowerCase() === userAddress?.toLowerCase());
+  const currentPlayer = players.find(
+    (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
+  );
   useKeyboardMovement(onMove);
   return (
     <div className="aspect-square w-full max-w-[40rem]">
@@ -48,7 +51,7 @@ export function GameMap({ players = [], onMove }: Props) {
                 className={twMerge(
                   "outline-0 absolute inset-0 cursor-pointer grid p-4",
                   rotateClassName[direction],
-                  "transition bg-gradient-to-t from-transparent via-transparent to-blue-50 text-blue-400 opacity-0 hover:opacity-40 active:opacity-100",
+                  "transition bg-gradient-to-t from-transparent via-transparent to-blue-50 text-blue-400 opacity-0 hover:opacity-40 active:opacity-100"
                 )}
                 style={{ clipPath: "polygon(0% 0%, 100% 0%, 50% 50%)" }}
                 onClick={() => onMove(direction)}
@@ -71,8 +74,26 @@ export function GameMap({ players = [], onMove }: Props) {
             }}
             title={serialize(player, null, 2)}
           >
-            {player === currentPlayer ? <div className="w-full h-full bg-current animate-ping opacity-50" /> : null}
+            {player === currentPlayer ? (
+              <div className="w-full h-full bg-current animate-ping opacity-50" />
+            ) : null}
           </div>
+        ))}
+
+        {TREES.map((tree, index) => (
+          <div
+            key={index}
+            className="absolute bg-current"
+            style={{
+              color: "brown",
+              width: `${scale}%`,
+              height: `${scale}%`,
+              left: `${((((tree.x + size / 2) % size) + size) % size) * scale}%`,
+              top: `${((size - ((tree.y + size / 2) % size)) % size) * scale}%`,
+              borderRadius: "50%",
+            }}
+            title={serialize(tree, null, 2)}
+          ></div>
         ))}
 
         {!currentPlayer ? (
@@ -96,6 +117,7 @@ export function GameMap({ players = [], onMove }: Props) {
             </div>
           )
         ) : null}
+        <Agent />
       </div>
     </div>
   );
