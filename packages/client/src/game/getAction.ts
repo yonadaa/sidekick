@@ -75,7 +75,11 @@ const llm = new ChatAnthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
 }).withStructuredOutput(Output);
 
-export async function getAction(state: State, goal: string) {
+export async function getAction(
+  state: State,
+  playerAddress: Address,
+  goal: string
+) {
   const content = `
 Your task is to control a player in a game. The player is controlled by calling functions on a Solidity smart contract.
 You will be given some goal, and the current state of the game. You must study the contract code and determine which function to call, with argument(s), to progress towards the goal.
@@ -90,6 +94,9 @@ Your output is an object with a \`chainOfThought\` key that explains your reason
 
 If the argument is an Enum, output the index of the element instead of it's name, so North=0, East=1 etc.
 
+Your player address:
+${playerAddress}
+
 Game state:
 ${JSON.stringify(state)}
 
@@ -102,6 +109,8 @@ ${harvestSystem}
 \`\`\`
 Your goal:
 ${goal}`;
+
+  console.log(content);
 
   const output = await llm.invoke([content]);
   console.log(output);

@@ -24,7 +24,7 @@ export function Agent() {
   const trees = useTrees();
 
   async function onClick() {
-    if (sync.data && worldContract && currentPlayer) {
+    if (sync.data && worldContract && userAddress && currentPlayer) {
       const state = {
         players: players.map((player) => ({
           player: player.player,
@@ -34,14 +34,16 @@ export function Agent() {
         trees,
       };
 
-      const action = await getAction(state, goal);
+      const action = await getAction(state, userAddress, goal);
 
       if (action.functionName === "move") {
-        const tx = await worldContract.write.app__move(action.args);
+        const tx = await worldContract.write.app__move(action.args as [number]);
         await sync.data.waitForTransaction(tx);
       }
       if (action.functionName === "harvest") {
-        const tx = await worldContract.write.app__harvest(action.args);
+        const tx = await worldContract.write.app__harvest(
+          action.args as [number, number]
+        );
         await sync.data.waitForTransaction(tx);
       }
     }
