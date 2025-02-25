@@ -10,5 +10,9 @@ export default defineWorld({
       schema: { player: "address", x: "int32", y: "int32" },
       key: ["player"],
     },
+    Tree: {
+      schema: { x: "int32", y: "int32", harvested: "bool" },
+      key: ["x", "y"],
+    },
   },
 });

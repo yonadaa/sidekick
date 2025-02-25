@@ -14,7 +14,7 @@ type State = {
   }[];
 };
 
-const contract = `// SPDX-License-Identifier: MIT
+const moveSystem = `// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
@@ -47,6 +47,23 @@ contract MoveSystem is System {
   }
 }`;
 
+const harvestSystem = `// SPDX-License-Identifier: MIT
+pragma solidity >=0.8.24;
+
+import { System } from "@latticexyz/world/src/System.sol";
+
+import { Position, PositionData } from "./codegen/tables/Position.sol";
+import { coordinateHasTree } from "./coordinateHasTree.sol";
+
+contract HarvestSystem is System {
+  function harvest(int32 x, int32 y) public {
+    address player = _msgSender();
+    PositionData memory position = Position.get(player);
+
+    require(coordinateHasTree(position.x, position.y), "No tree here");
+  }
+}`;
+
 const Output = z.object({
   chainOfThought: z.string(),
   functionName: z.string(),
@@ -54,7 +71,7 @@ const Output = z.object({
 });
 
 const llm = new ChatAnthropic({
-  model: "claude-3-5-haiku-latest",
+  model: "claude-3-5-sonnet-latest",
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
 }).withStructuredOutput(Output);
 
@@ -78,9 +95,11 @@ ${JSON.stringify(state)}
 
 Smart contract functions:
 \`\`\`solidity
-${contract}
+${moveSystem}
 \`\`\`
-
+\`\`\`solidity
+${harvestSystem}
+\`\`\`
 Your goal:
 ${goal}`;
 

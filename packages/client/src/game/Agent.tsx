@@ -6,25 +6,8 @@ import mudConfig from "contracts/mud.config";
 import { useAccount } from "wagmi";
 import { useSync } from "@latticexyz/store-sync/react";
 import { getAction } from "./getAction";
-import { coordinateHasTree } from "./coordinateHasTree";
 import { useState } from "react";
-
-const RANGE = 10;
-
-function getTrees() {
-  const trees: { x: number; y: number }[] = [];
-  for (let x = -RANGE; x < RANGE; x++) {
-    for (let y = -RANGE; y < RANGE; y++) {
-      if (coordinateHasTree(x, y)) {
-        trees.push({ x, y });
-      }
-    }
-  }
-
-  return trees;
-}
-
-export const TREES = getTrees();
+import { useTrees } from "./useTrees";
 
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
@@ -38,6 +21,8 @@ export function Agent() {
     (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
   );
 
+  const trees = useTrees();
+
   async function onClick() {
     if (sync.data && worldContract && currentPlayer) {
       const state = {
@@ -46,13 +31,19 @@ export function Agent() {
           x: player.x,
           y: player.y,
         })),
-        trees: TREES,
+        trees,
       };
 
       const action = await getAction(state, goal);
 
-      const tx = await worldContract.write.app__move([action.args[0]]);
-      await sync.data.waitForTransaction(tx);
+      if (action.functionName === "move") {
+        const tx = await worldContract.write.app__move(action.args);
+        await sync.data.waitForTransaction(tx);
+      }
+      if (action.functionName === "harvest") {
+        const tx = await worldContract.write.app__harvest(action.args);
+        await sync.data.waitForTransaction(tx);
+      }
     }
   }
 

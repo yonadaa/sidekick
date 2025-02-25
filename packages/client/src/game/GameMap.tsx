@@ -6,7 +6,8 @@ import { Direction } from "../common";
 import mudConfig from "contracts/mud.config";
 import { AsyncButton } from "../ui/AsyncButton";
 import { useAccountModal } from "@latticexyz/entrykit/internal";
-import { Agent, TREES } from "./Agent";
+import { Agent } from "./Agent";
+import { useTrees } from "./useTrees";
 
 export type Props = {
   readonly players?: readonly {
@@ -38,7 +39,9 @@ export function GameMap({ players = [], onMove }: Props) {
   const currentPlayer = players.find(
     (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
   );
-  // useKeyboardMovement(onMove);
+
+  const trees = useTrees();
+
   return (
     <div className="aspect-square w-full max-w-[40rem]">
       <div className="relative w-full h-full border-8 border-black/10">
@@ -79,12 +82,12 @@ export function GameMap({ players = [], onMove }: Props) {
           </div>
         ))}
 
-        {TREES.map((tree, index) => (
+        {trees.map((tree, index) => (
           <div
             key={index}
             className="absolute bg-current"
             style={{
-              color: "ForestGreen",
+              color: tree.harvested ? "red" : "ForestGreen",
               width: `${scale}%`,
               height: `${scale}%`,
               left: `${((((tree.x + size / 2) % size) + size) % size) * scale}%`,
