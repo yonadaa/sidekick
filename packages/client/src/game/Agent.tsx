@@ -9,12 +9,16 @@ import { useSync } from "@latticexyz/store-sync/react";
 
 export const TREES = [
   {
-    x: 1,
+    x: 5,
     y: 4,
   },
   {
-    x: 5,
+    x: 1,
     y: 7,
+  },
+  {
+    x: -2,
+    y: 0,
   },
 ];
 

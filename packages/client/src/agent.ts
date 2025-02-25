@@ -1,22 +1,18 @@
 import { z } from "zod";
 import { ChatAnthropic } from "@langchain/anthropic";
+import { Address } from "viem";
 
-const Coordinate = z.object({
-  x: z.number(),
-  y: z.number(),
-});
-
-const State = z.object({
-  players: z.array(
-    z.object({
-      player: z.string(),
-      x: z.number(),
-      y: z.number(),
-    })
-  ),
-  trees: z.array(Coordinate),
-});
-type State = z.infer<typeof State>;
+type State = {
+  players: {
+    player: Address;
+    x: number;
+    y: number;
+  }[];
+  trees: {
+    x: number;
+    y: number;
+  }[];
+};
 
 const contract = `// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
@@ -51,14 +47,10 @@ contract MoveSystem is System {
   }
 }`;
 
-const Call = z.object({
-  functionName: z.string(),
-  args: z.array(z.any()),
-});
-
 const Output = z.object({
   chainOfThought: z.string(),
-  call: Call,
+  functionName: z.string(),
+  args: z.array(z.any()),
 });
 
 const llm = new ChatAnthropic({
@@ -67,36 +59,33 @@ const llm = new ChatAnthropic({
 }).withStructuredOutput(Output);
 
 export async function getAction(state: State) {
-  const content = `Your task is to control a player in a game. This game is onchain, meaning the game logic is represented by a Solidity smart contract.
-Your task is to study the contract code and determine which function to call, with argument(s), given the current game state and some goal.
+  const content = `
+Your task is to control a player in a game. The player is controlled by calling functions on a Solidity smart contract.
+You will be given some goal, and the current state of the game. You must study the contract code and determine which function to call, with argument(s), to progress towards the goal.
 
-Your output is an object with a \`chainOfThought\` key that explains your reasoning, and a function call, without any additional comments, like so:
-
+Your output is an object with a \`chainOfThought\` key that explains your reasoning, a \`functionName\` key, and an \`args\` key, without any additional comments, like so:
 
 {
   chainOfThought: string;
-  call: {
-    functionName: string;
-    args: any[];
-  }
+  functionName: string;
+  args: any[];
 }
 
-Game state:
+If the argument is an Enum, output the index of the element instead of it's name, so North=0, East=1 etc.
 
+Game state:
 ${JSON.stringify(state)}
 
 Smart contract functions:
-
 \`\`\`solidity
 ${contract}
 \`\`\`
 
 Your goal:
-
 Move towards the tree that is closest to the player.`;
 
   const output = await llm.invoke([content]);
   console.log(output);
 
-  return output.call;
+  return output;
 }
