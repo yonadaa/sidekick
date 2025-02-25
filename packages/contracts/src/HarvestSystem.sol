@@ -8,11 +8,12 @@ import { Tree } from "./codegen/tables/Tree.sol";
 import { coordinateHasTree } from "./coordinateHasTree.sol";
 
 contract HarvestSystem is System {
-  function harvest(int32 x, int32 y) public {
+  function harvest() public {
     address player = _msgSender();
     PositionData memory position = Position.get(player);
 
     require(coordinateHasTree(position.x, position.y), "No tree here");
+    require(!Tree.get(position.x, position.y), "Tree already harvested");
 
     Tree.set(position.x, position.y, true);
   }

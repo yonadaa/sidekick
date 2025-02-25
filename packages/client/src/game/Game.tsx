@@ -7,6 +7,7 @@ import { Direction } from "../common";
 import { Spawn } from "./Spawn";
 import { twMerge } from "tailwind-merge";
 import { ArrowDownIcon } from "../ui/icons/ArrowDownIcon";
+import { AsyncButton } from "../ui/AsyncButton";
 
 const rotateClassName = {
   North: "rotate-0",
@@ -31,10 +32,31 @@ export function Game() {
     [sync.data, worldContract]
   );
 
+  const onHarvest = useMemo(
+    () =>
+      sync.data && worldContract
+        ? async () => {
+            const tx = await worldContract.write.app__harvest();
+            await sync.data.waitForTransaction(tx);
+          }
+        : undefined,
+    [sync.data, worldContract]
+  );
+
   return (
     <div>
       <GameMap />
       <Spawn onMove={onMove} />
+      {onHarvest ? (
+        <div className="absolute left-0 top-0 grid place-items-center">
+          <AsyncButton
+            className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg text-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse"
+            onClick={() => onHarvest()}
+          >
+            Harvest<span className="hidden group-aria-busy:inline">ing…</span>
+          </AsyncButton>
+        </div>
+      ) : null}
       {onMove
         ? mudConfig.enums.Direction.map((direction) => (
             <button
