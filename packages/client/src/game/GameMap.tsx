@@ -1,27 +1,10 @@
-import { useAccount } from "wagmi";
-
-import { twMerge } from "tailwind-merge";
-import { Direction } from "../common";
-import mudConfig from "contracts/mud.config";
-import { useAccountModal } from "@latticexyz/entrykit/internal";
-
-import { coordinateHasTree } from "./coordinateHasTree";
-import { useTiles } from "./useTiles";
 import { useRecords } from "@latticexyz/stash/react";
+import mudConfig from "contracts/mud.config";
+import { useTiles } from "./useTiles";
 import { stash } from "../mud/stash";
 
-export type Props = {
-  readonly onMove?: (direction: Direction) => Promise<void>;
-};
-
-export function GameMap({ onMove }: Props) {
-  const { openAccountModal } = useAccountModal();
-  const { address: userAddress } = useAccount();
-
+export function GameMap() {
   const players = useRecords({ stash, table: mudConfig.tables.app__Position });
-  const currentPlayer = players.find(
-    (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
-  );
 
   const tiles = useTiles();
 
@@ -40,7 +23,7 @@ export function GameMap({ onMove }: Props) {
             className="w-8 h-8 flex items-center justify-center border border-gray-600"
             style={{
               gridColumn: x + 1,
-              gridRow: y + 1,
+              gridRow: -y + 1,
             }}
           >
             <div className="flex flex-wrap gap-1 items-center justify-center relative">
