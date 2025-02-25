@@ -7,6 +7,7 @@ import { useAccount } from "wagmi";
 import { useSync } from "@latticexyz/store-sync/react";
 import { getAction } from "./getAction";
 import { coordinateHasTree } from "./coordinateHasTree";
+import { useState } from "react";
 
 const RANGE = 10;
 
@@ -26,6 +27,8 @@ function getTrees() {
 export const TREES = getTrees();
 
 export function Agent() {
+  const [goal, setGoal] = useState("Move towards the closest tree.");
+
   const sync = useSync();
   const worldContract = useWorldContract();
   const { address: userAddress } = useAccount();
@@ -45,7 +48,8 @@ export function Agent() {
         })),
         trees: TREES,
       };
-      const action = await getAction(state);
+
+      const action = await getAction(state, goal);
 
       const tx = await worldContract.write.app__move([action.args[0]]);
       await sync.data.waitForTransaction(tx);
@@ -55,6 +59,16 @@ export function Agent() {
   return (
     <div>
       <div className="absolute right-0 bottom-0 grid place-items-center">
+        <form className="bg-white shadow-md rounded">
+          <input
+            className="shadow appearance-none border rounded w-72 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            onChange={(event) => {
+              setGoal(event.target.value);
+            }}
+            value={goal}
+          />
+        </form>
         <AsyncButton
           className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg text-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse"
           onClick={onClick}

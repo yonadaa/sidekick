@@ -8,7 +8,9 @@ const keys = new Map<KeyboardEvent["key"], Direction>([
   ["ArrowLeft", "West"],
 ]);
 
-export const useKeyboardMovement = (move: undefined | ((direction: Direction) => void)) => {
+export const useKeyboardMovement = (
+  move: undefined | ((direction: Direction) => void)
+) => {
   useEffect(() => {
     if (!move) return;
 

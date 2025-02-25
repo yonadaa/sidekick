@@ -58,7 +58,7 @@ const llm = new ChatAnthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
 }).withStructuredOutput(Output);
 
-export async function getAction(state: State) {
+export async function getAction(state: State, goal: string) {
   const content = `
 Your task is to control a player in a game. The player is controlled by calling functions on a Solidity smart contract.
 You will be given some goal, and the current state of the game. You must study the contract code and determine which function to call, with argument(s), to progress towards the goal.
@@ -82,7 +82,7 @@ ${contract}
 \`\`\`
 
 Your goal:
-Move towards the tree that is closest to the player.`;
+${goal}`;
 
   const output = await llm.invoke([content]);
   console.log(output);
