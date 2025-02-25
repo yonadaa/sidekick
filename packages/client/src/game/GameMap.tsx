@@ -85,7 +85,7 @@ export function GameMap({ players = [], onMove }: Props) {
             key={index}
             className="absolute bg-current"
             style={{
-              color: "brown",
+              color: "Sienna",
               width: `${scale}%`,
               height: `${scale}%`,
               left: `${((((tree.x + size / 2) % size) + size) % size) * scale}%`,

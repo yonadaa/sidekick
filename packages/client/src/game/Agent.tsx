@@ -3,24 +3,27 @@ import { stash } from "../mud/stash";
 import { useWorldContract } from "../mud/useWorldContract";
 import { AsyncButton } from "../ui/AsyncButton";
 import mudConfig from "contracts/mud.config";
-import { getAction } from "../agent";
 import { useAccount } from "wagmi";
 import { useSync } from "@latticexyz/store-sync/react";
+import { getAction } from "./getAction";
+import { coordinateHasTree } from "./coordinateHasTree";
 
-export const TREES = [
-  {
-    x: 5,
-    y: 4,
-  },
-  {
-    x: 1,
-    y: 7,
-  },
-  {
-    x: -2,
-    y: 0,
-  },
-];
+const RANGE = 10;
+
+function getTrees() {
+  const trees: { x: number; y: number }[] = [];
+  for (let x = -RANGE; x < RANGE; x++) {
+    for (let y = -RANGE; y < RANGE; y++) {
+      if (coordinateHasTree(x, y)) {
+        trees.push({ x, y });
+      }
+    }
+  }
+
+  return trees;
+}
+
+export const TREES = getTrees();
 
 export function Agent() {
   const sync = useSync();
