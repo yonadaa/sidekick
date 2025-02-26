@@ -1,26 +1,20 @@
-import { useRecords } from "@latticexyz/stash/react";
-import mudConfig from "contracts/mud.config";
-import { stash } from "../mud/stash";
-import { coordinateHasTree } from "./coordinateHasTree";
+import { useTrees } from "./useTrees";
 
 type Tile = {
   x: number;
   y: number;
-  hasTree?: boolean;
-  harvested?: boolean;
+  tree?: {
+    x: number;
+    y: number;
+    harvested: boolean;
+  };
 };
 
-const RANGE = 20;
-
-function getTiles() {
+function getTiles(xEnd: number, yEnd: number) {
   const tiles: Tile[] = [];
-  for (let x = 0; x < RANGE; x++) {
-    for (let y = 0; y < RANGE; y++) {
+  for (let x = 0; x < xEnd; x++) {
+    for (let y = 0; y < yEnd; y++) {
       const tile: Tile = { x, y };
-      if (coordinateHasTree(x, y)) {
-        tile.hasTree = true;
-        tile.harvested = false;
-      }
       tiles.push(tile);
     }
   }
@@ -28,22 +22,17 @@ function getTiles() {
   return tiles;
 }
 
+const END = 20;
+
 export function useTiles(): Tile[] {
-  const tiles = getTiles();
-  const harvestedTrees = useRecords({
-    stash,
-    table: mudConfig.tables.app__Tree,
-  });
+  const tiles = getTiles(END, END);
+  const trees = useTrees(END, END);
 
   const finishedTiles = tiles.map((tile) => {
     return {
       x: tile.x,
       y: tile.y,
-      hasTree: tile.hasTree,
-      harvested: harvestedTrees.some(
-        (harvestedTree) =>
-          harvestedTree.x === tile.x && harvestedTree.y === tile.y
-      ),
+      tree: trees.find((tree) => tree.x === tile.x && tree.y === tile.y),
     };
   });
 

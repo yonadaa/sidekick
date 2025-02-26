@@ -21,7 +21,7 @@ export function Agent() {
       stash.getRecords({ table: mudConfig.tables.app__Player })
     );
 
-    const trees = getTrees();
+    const trees = getTrees(20, 20);
 
     if (sync.data && worldContract && userAddress) {
       const state = {
