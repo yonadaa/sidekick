@@ -106,7 +106,9 @@ Your player address:
 ${playerAddress}
 
 Game state:
+\`\`\`json
 ${JSON.stringify(state)}
+\`\`\`
 
 Smart contract functions:
 \`\`\`solidity
