@@ -11,6 +11,7 @@ import { useTrees } from "./useTrees";
 
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
+  const [call, setCall] = useState<{ functionName: string; args: unknown[] }>();
   const [reasoning, setReasoning] = useState("...");
 
   const sync = useSync();
@@ -47,6 +48,7 @@ export function Agent() {
       }
 
       setReasoning(action.chainOfThought);
+      setCall({ functionName: action.functionName, args: action.args });
     }
   }
 
@@ -70,8 +72,12 @@ export function Agent() {
           Act<span className="hidden group-aria-busy:inline">ing…</span>
         </AsyncButton>
       </div>
-      <div className="p-2" style={{ whiteSpace: "pre-line" }}>
+      <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
         {reasoning}
+      </div>
+      <div className="p-2 border-2">
+        <div>{call ? `functionName: ${call.functionName}` : null}</div>
+        <div>{call ? `args: [${call.args.toString()}]` : null}</div>
       </div>
     </div>
   );
