@@ -10,6 +10,7 @@ import { useKeyboardMovement } from "./useKeyboardMovement";
 import { Agent } from "./Agent";
 import { useAccount } from "wagmi";
 import { useRecords } from "@latticexyz/stash/react";
+import { Address } from "viem";
 
 export function Game() {
   const sync = useSync();
@@ -40,7 +41,18 @@ export function Game() {
     [sync.data, worldContract]
   );
 
-  useKeyboardMovement(onMove, onHarvest);
+  const onSteal = useMemo(
+    () =>
+      sync.data && worldContract
+        ? async (target: Address) => {
+            const tx = await worldContract.write.app__steal([target]);
+            await sync.data.waitForTransaction(tx);
+          }
+        : undefined,
+    [sync.data, worldContract]
+  );
+
+  useKeyboardMovement(onMove, onHarvest, onSteal);
 
   const players = useRecords({ stash, table: mudConfig.tables.app__Player });
   const currentPlayer = players.find(
