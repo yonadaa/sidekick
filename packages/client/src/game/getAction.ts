@@ -90,11 +90,14 @@ You will be given some goal, and the current state of the game. You must study t
 
 Your output is an object with a \`chainOfThought\` key that explains your reasoning, a \`functionName\` key, and an \`args\` key, without any additional comments, like so:
 
+
+\`\`\`ts
 {
   chainOfThought: string;
   functionName: string;
   args: any[];
 }
+\`\`\`
 
 If the argument is an Enum, output the index of the element instead of it's name, so North=0, East=1 etc.
 
