@@ -31,14 +31,10 @@ export function Agent() {
 
       const output = await getAction(state, userAddress, goal);
 
-      if (output.functionName === "move") {
-        const tx = await worldContract.write.app__move(output.args as [number]);
-        await sync.data.waitForTransaction(tx);
-      }
-      if (output.functionName === "harvest") {
-        const tx = await worldContract.write.app__harvest();
-        await sync.data.waitForTransaction(tx);
-      }
+      const functionName = `app__${output.functionName}`;
+      // @ts-expect-error functionName is not specific
+      const tx = await worldContract.write[functionName](output.args);
+      await sync.data.waitForTransaction(tx);
 
       setOutput(output);
     }
