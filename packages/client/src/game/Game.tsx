@@ -1,16 +1,21 @@
 import { GameMap } from "./GameMap";
 import mudConfig from "contracts/mud.config";
 import { useWorldContract } from "../mud/useWorldContract";
+import { stash } from "../mud/stash";
 import { useSync } from "@latticexyz/store-sync/react";
 import { useMemo } from "react";
 import { Direction } from "../common";
 import { Spawn } from "./Spawn";
 import { useKeyboardMovement } from "./useKeyboardMovement";
 import { Agent } from "./Agent";
+import { useAccount } from "wagmi";
+import { useRecords } from "@latticexyz/stash/react";
 
 export function Game() {
   const sync = useSync();
   const worldContract = useWorldContract();
+  const { address: userAddress } = useAccount();
+
   const onMove = useMemo(
     () =>
       sync.data && worldContract
@@ -37,11 +42,16 @@ export function Game() {
 
   useKeyboardMovement(onMove, onHarvest);
 
+  const players = useRecords({ stash, table: mudConfig.tables.app__Position });
+  const currentPlayer = players.find(
+    (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
+  );
+
   return (
     <div>
       <GameMap />
       <Spawn onMove={onMove} />
-      <Agent />
+      {currentPlayer ? <Agent /> : null}
     </div>
   );
 }
