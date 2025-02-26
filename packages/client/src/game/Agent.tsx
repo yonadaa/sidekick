@@ -25,9 +25,10 @@ export function Agent() {
 
     const woods = Object.values(
       stash.getRecords({ table: mudConfig.tables.app__Wood })
-    ).map((wood) => {
-      return { player: wood.player, balance: wood.balance.toString() };
-    });
+    ).map((wood) => ({
+      player: wood.player,
+      balance: wood.balance.toString(),
+    }));
 
     if (sync.data && worldContract && userAddress) {
       const state = {
