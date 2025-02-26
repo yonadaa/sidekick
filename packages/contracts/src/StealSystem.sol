@@ -12,7 +12,7 @@ contract StealSystem is System {
 
     require(player.x == target.x && player.y == target.y, "Player not at these coordinates");
 
-    Player.setWoodBalance(account, player.woodBalance + target.woodBalance);
     Player.setWoodBalance(targetAccount, 0);
+    Player.setWoodBalance(account, player.woodBalance + target.woodBalance);
   }
 }
