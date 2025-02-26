@@ -17,18 +17,15 @@ export function Agent() {
   const { address: userAddress } = useAccount();
 
   async function onClick() {
-    const trees = getTrees();
-
     const players = Object.values(
       stash.getRecords({ table: mudConfig.tables.app__Position })
     );
 
     const woods = Object.values(
       stash.getRecords({ table: mudConfig.tables.app__Wood })
-    ).map((wood) => ({
-      player: wood.player,
-      balance: wood.balance.toString(),
-    }));
+    );
+
+    const trees = getTrees();
 
     if (sync.data && worldContract && userAddress) {
       const state = {
@@ -37,8 +34,8 @@ export function Agent() {
           x: player.x,
           y: player.y,
         })),
-        trees,
         woods,
+        trees,
       };
 
       const output = await getAction(state, userAddress, goal);

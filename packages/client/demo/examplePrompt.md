@@ -1,9 +1,7 @@
-
 Your task is to control a player in a game. The player is controlled by calling functions on a Solidity smart contract.
 You will be given some goal, and the current state of the game. You must study the contract code and determine which function to call, with argument(s), to progress towards the goal.
 
 Your output is an object with a `chainOfThought` key that explains your reasoning, a `functionName` key, and an `args` key, without any additional comments, like so:
-
 
 ```ts
 {
@@ -19,11 +17,36 @@ Your player address:
 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 
 Game state:
+
 ```json
-{"players":[{"player":"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266","x":2,"y":3}],"trees":[{"x":0,"y":4,"harvested":false},{"x":1,"y":3,"harvested":true},{"x":2,"y":3,"harvested":true},{"x":5,"y":11,"harvested":false},{"x":7,"y":14,"harvested":false},{"x":8,"y":7,"harvested":false},{"x":9,"y":12,"harvested":false},{"x":9,"y":18,"harvested":false},{"x":10,"y":8,"harvested":false},{"x":12,"y":9,"harvested":false},{"x":12,"y":11,"harvested":false},{"x":13,"y":2,"harvested":false},{"x":16,"y":5,"harvested":false},{"x":18,"y":12,"harvested":false}],"woods":[{"player":"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266","balance":"2"}]}
+{
+  "players": [
+    { "player": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", "x": 2, "y": 3 }
+  ],
+  "trees": [
+    { "x": 0, "y": 4, "harvested": false },
+    { "x": 1, "y": 3, "harvested": true },
+    { "x": 2, "y": 3, "harvested": true },
+    { "x": 5, "y": 11, "harvested": false },
+    { "x": 7, "y": 14, "harvested": false },
+    { "x": 8, "y": 7, "harvested": false },
+    { "x": 9, "y": 12, "harvested": false },
+    { "x": 9, "y": 18, "harvested": false },
+    { "x": 10, "y": 8, "harvested": false },
+    { "x": 12, "y": 9, "harvested": false },
+    { "x": 12, "y": 11, "harvested": false },
+    { "x": 13, "y": 2, "harvested": false },
+    { "x": 16, "y": 5, "harvested": false },
+    { "x": 18, "y": 12, "harvested": false }
+  ],
+  "woods": [
+    { "player": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", "balance": "2" }
+  ]
+}
 ```
 
 Smart contract functions:
+
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
@@ -53,6 +76,7 @@ contract MoveSystem is System {
 }
 
 ```
+
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
@@ -78,5 +102,6 @@ contract HarvestSystem is System {
 }
 
 ```
+
 Your goal:
 Harvest the closest tree.

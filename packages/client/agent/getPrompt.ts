@@ -1,24 +1,24 @@
 import { Address } from "viem";
+import { GetRecordsResult } from "@latticexyz/stash/internal";
+import mudConfig from "contracts/mud.config";
 import { systems } from "../src/game/systems";
 
 export type State = {
-  players: {
-    player: Address;
-    x: number;
-    y: number;
-  }[];
-  trees: {
-    x: number;
-    y: number;
-    harvested: boolean;
-  }[];
-  woods: {
-    player: Address;
-    balance: string;
-  }[];
+  players: GetRecordsResult<
+    typeof mudConfig.tables.app__Position
+  >[keyof typeof mudConfig.tables.app__Position][];
+  woods: GetRecordsResult<
+    typeof mudConfig.tables.app__Wood
+  >[keyof typeof mudConfig.tables.app__Wood][];
+  trees: GetRecordsResult<
+    typeof mudConfig.tables.app__Tree
+  >[keyof typeof mudConfig.tables.app__Tree][];
 };
 
 export function getPrompt(state: State, playerAddress: Address, goal: string) {
+  //@ts-expect-error readonly property
+  state.woods.map((wood) => (wood.balance = wood.balance.toString()));
+
   return `
 Your task is to control a player in a game. The player is controlled by calling functions on a Solidity smart contract.
 You will be given some goal, and the current state of the game. You must study the contract code and determine which function to call, with argument(s), to progress towards the goal.

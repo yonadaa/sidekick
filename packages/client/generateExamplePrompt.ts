@@ -85,7 +85,7 @@ const prompt = getPrompt(
     woods: [
       {
         player: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-        balance: "2",
+        balance: 2n,
       },
     ],
   },
@@ -93,4 +93,4 @@ const prompt = getPrompt(
   "Harvest the closest tree."
 );
 
-fs.writeFileSync("./demo/prompt.md", prompt);
+fs.writeFileSync("./demo/examplePrompt.md", prompt);
