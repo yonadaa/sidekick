@@ -3,8 +3,6 @@ import mudConfig from "contracts/mud.config";
 import { stash } from "../mud/stash";
 import { coordinateHasTree } from "./coordinateHasTree";
 
-const RANGE = 10;
-
 type Tile = {
   x: number;
   y: number;
@@ -12,10 +10,12 @@ type Tile = {
   harvested?: boolean;
 };
 
+const RANGE = 20;
+
 function getTiles() {
   const tiles: Tile[] = [];
-  for (let x = -RANGE; x < RANGE; x++) {
-    for (let y = -RANGE; y < RANGE; y++) {
+  for (let x = 0; x < RANGE; x++) {
+    for (let y = 0; y < RANGE; y++) {
       const tile: Tile = { x, y };
       if (coordinateHasTree(x, y)) {
         tile.hasTree = true;
