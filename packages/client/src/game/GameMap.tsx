@@ -1,17 +1,17 @@
 import { useRecords } from "@latticexyz/stash/react";
 import mudConfig from "contracts/mud.config";
-import { useTiles } from "./useTiles";
+import { useTiles } from "./utils/useTiles";
 import { stash } from "../mud/stash";
 
 export function GameMap() {
-  const players = useRecords({ stash, table: mudConfig.tables.app__Position });
+  const players = useRecords({ stash, table: mudConfig.tables.app__Player });
 
   const tiles = useTiles();
 
   return (
     <div className="inline-grid p-2 bg-lime-500 relative overflow-hidden">
       {tiles.map((tile) => {
-        const { x, y, hasTree, harvested } = tile;
+        const { x, y, tree } = tile;
 
         const player = players.find(
           (player) => player.x === x && player.y === y
@@ -31,9 +31,9 @@ export function GameMap() {
                 <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none">
                   🧑‍🌾
                 </div>
-              ) : hasTree ? (
+              ) : tree ? (
                 <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none">
-                  {harvested ? "🍂" : "🌳"}
+                  {tree.harvested ? "🍂" : "🌳"}
                 </div>
               ) : null}
             </div>

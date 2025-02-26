@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+export const HarvestSystem = `// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
@@ -19,3 +19,4 @@ contract HarvestSystem is System {
     Player.setWoodBalance(account, Player.getWoodBalance(account) + 1);
   }
 }
+`

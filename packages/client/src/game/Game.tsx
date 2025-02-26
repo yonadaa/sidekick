@@ -42,14 +42,9 @@ export function Game() {
 
   useKeyboardMovement(onMove, onHarvest);
 
-  const players = useRecords({ stash, table: mudConfig.tables.app__Position });
+  const players = useRecords({ stash, table: mudConfig.tables.app__Player });
   const currentPlayer = players.find(
-    (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
-  );
-
-  const woods = useRecords({ stash, table: mudConfig.tables.app__Wood });
-  const currentWood = woods.find(
-    (wood) => wood.player.toLowerCase() === userAddress?.toLowerCase()
+    (player) => player.account.toLowerCase() === userAddress?.toLowerCase()
   );
 
   return (
@@ -58,7 +53,7 @@ export function Game() {
       <Spawn onMove={onMove} />
       {currentPlayer ? <Agent /> : null}
       <div className="grid place-items-center p-2 text-lg">
-        {currentWood ? Number(currentWood.balance) : 0}🪵
+        {currentPlayer ? currentPlayer.woodBalance.toString() : "0"}🪵
       </div>
     </div>
   );

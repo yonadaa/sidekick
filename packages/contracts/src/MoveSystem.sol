@@ -3,24 +3,21 @@ pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
-import { Position, PositionData } from "./codegen/tables/Position.sol";
+import { Player, PlayerData } from "./codegen/tables/Player.sol";
 import { Direction } from "./codegen/common.sol";
 
 contract MoveSystem is System {
   function move(Direction direction) public {
-    address player = _msgSender();
-    PositionData memory position = Position.get(player);
+    address account = _msgSender();
 
     if (direction == Direction.North) {
-      position.y += 1;
+      Player.setY(account, Player.getY(account) + 1);
     } else if (direction == Direction.East) {
-      position.x += 1;
+      Player.setX(account, Player.getX(account) + 1);
     } else if (direction == Direction.South) {
-      position.y -= 1;
+      Player.setY(account, Player.getY(account) - 1);
     } else if (direction == Direction.West) {
-      position.x -= 1;
+      Player.setX(account, Player.getX(account) - 1);
     }
-
-    Position.set(player, position);
   }
 }
