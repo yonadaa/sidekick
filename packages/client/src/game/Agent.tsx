@@ -1,4 +1,3 @@
-import { useRecords } from "@latticexyz/stash/react";
 import { stash } from "../mud/stash";
 import { useWorldContract } from "../mud/useWorldContract";
 import { AsyncButton } from "../ui/AsyncButton";
@@ -7,7 +6,7 @@ import { useAccount } from "wagmi";
 import { useSync } from "@latticexyz/store-sync/react";
 import { getAction, Output } from "./getAction";
 import { useState } from "react";
-import { useTrees } from "./useTrees";
+import { getTrees } from "./getTrees";
 
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
@@ -17,14 +16,16 @@ export function Agent() {
   const worldContract = useWorldContract();
   const { address: userAddress } = useAccount();
 
-  const players = useRecords({ stash, table: mudConfig.tables.app__Position });
-  const currentPlayer = players.find(
-    (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
-  );
-
-  const trees = useTrees();
-
   async function onClick() {
+    const trees = getTrees();
+
+    const players = Object.values(
+      stash.getRecords({ table: mudConfig.tables.app__Position })
+    );
+    const currentPlayer = players.find(
+      (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
+    );
+
     if (sync.data && worldContract && userAddress && currentPlayer) {
       const state = {
         players: players.map((player) => ({
