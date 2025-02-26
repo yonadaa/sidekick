@@ -5,14 +5,13 @@ import { AsyncButton } from "../ui/AsyncButton";
 import mudConfig from "contracts/mud.config";
 import { useAccount } from "wagmi";
 import { useSync } from "@latticexyz/store-sync/react";
-import { getAction } from "./getAction";
+import { getAction, Output } from "./getAction";
 import { useState } from "react";
 import { useTrees } from "./useTrees";
 
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
-  const [call, setCall] = useState<{ functionName: string; args: unknown[] }>();
-  const [reasoning, setReasoning] = useState("...");
+  const [output, setOutput] = useState<Output>();
 
   const sync = useSync();
   const worldContract = useWorldContract();
@@ -36,19 +35,18 @@ export function Agent() {
         trees,
       };
 
-      const action = await getAction(state, userAddress, goal);
+      const output = await getAction(state, userAddress, goal);
 
-      if (action.functionName === "move") {
-        const tx = await worldContract.write.app__move(action.args as [number]);
+      if (output.functionName === "move") {
+        const tx = await worldContract.write.app__move(output.args as [number]);
         await sync.data.waitForTransaction(tx);
       }
-      if (action.functionName === "harvest") {
+      if (output.functionName === "harvest") {
         const tx = await worldContract.write.app__harvest();
         await sync.data.waitForTransaction(tx);
       }
 
-      setReasoning(action.chainOfThought);
-      setCall({ functionName: action.functionName, args: action.args });
+      setOutput(output);
     }
   }
 
@@ -72,13 +70,27 @@ export function Agent() {
           Act<span className="hidden group-aria-busy:inline">ing…</span>
         </AsyncButton>
       </div>
-      <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-        {reasoning}
-      </div>
-      <div className="p-2 border-2">
-        <div>{call ? `functionName: ${call.functionName}` : null}</div>
-        <div>{call ? `args: [${call.args.toString()}]` : null}</div>
-      </div>
+      {output ? (
+        <div>
+          <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+            {output.chainOfThought}
+          </div>
+          <div className="p-2 border-2">
+            <div>{`functionName: ${output.functionName}`}</div>
+            <div>{`args: [${output.args.toString()}]`}</div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+            ...
+          </div>
+          <div className="p-2 border-2">
+            <div>{`functionName: ...`}</div>
+            <div>{`args: ...`}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

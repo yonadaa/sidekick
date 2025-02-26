@@ -14,6 +14,13 @@ type State = {
   }[];
 };
 
+const Output = z.object({
+  chainOfThought: z.string(),
+  functionName: z.string(),
+  args: z.array(z.any()),
+});
+export type Output = z.infer<typeof Output>;
+
 const moveSystem = `// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
@@ -67,12 +74,6 @@ contract HarvestSystem is System {
     Tree.set(position.x, position.y, true);
   }
 }`;
-
-const Output = z.object({
-  chainOfThought: z.string(),
-  functionName: z.string(),
-  args: z.array(z.any()),
-});
 
 const llm = new ChatAnthropic({
   model: "claude-3-5-sonnet-latest",
