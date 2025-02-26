@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { Address } from "viem";
+import { harvestSystem } from "./harvestSystem";
+import { moveSystem } from "./moveSystem";
+import { systems } from "./systems";
 
 type State = {
   players: {
@@ -24,60 +27,6 @@ const Output = z.object({
   args: z.array(z.any()),
 });
 export type Output = z.infer<typeof Output>;
-
-const moveSystem = `// SPDX-License-Identifier: MIT
-pragma solidity >=0.8.24;
-
-import { System } from "@latticexyz/world/src/System.sol";
-
-import { Position, PositionData } from "./codegen/tables/Position.sol";
-
-enum Direction {
-  North,
-  East,
-  South,
-  West
-}
-
-contract MoveSystem is System {
-  function move(Direction direction) public {
-    address player = _msgSender();
-    PositionData memory position = Position.get(player);
-
-    if (direction == Direction.North) {
-      position.y += 1;
-    } else if (direction == Direction.East) {
-      position.x += 1;
-    } else if (direction == Direction.South) {
-      position.y -= 1;
-    } else if (direction == Direction.West) {
-      position.x -= 1;
-    }
-
-    Position.set(player, position);
-  }
-}`;
-
-const harvestSystem = `// SPDX-License-Identifier: MIT
-pragma solidity >=0.8.24;
-
-import { System } from "@latticexyz/world/src/System.sol";
-
-import { Position, PositionData } from "./codegen/tables/Position.sol";
-import { Tree } from "./codegen/tables/Tree.sol";
-import { coordinateHasTree } from "./coordinateHasTree.sol";
-
-contract HarvestSystem is System {
-  function harvest() public {
-    address player = _msgSender();
-    PositionData memory position = Position.get(player);
-
-    require(coordinateHasTree(position.x, position.y), "No tree here");
-    require(!Tree.get(position.x, position.y), "Tree already harvested");
-
-    Tree.set(position.x, position.y, true);
-  }
-}`;
 
 const llm = new ChatAnthropic({
   model: "claude-3-5-sonnet-latest",
@@ -115,14 +64,17 @@ ${JSON.stringify(state)}
 \`\`\`
 
 Smart contract functions:
-\`\`\`solidity
-${moveSystem}
-\`\`\`
-\`\`\`solidity
-${harvestSystem}
-\`\`\`
+${systems
+  .map(
+    (system) => `\`\`\`solidity
+${system}
+\`\`\``
+  )
+  .join("\n")}
 Your goal:
 ${goal}`;
+
+  console.log(content);
 
   const output = await llm.invoke([content]);
 
