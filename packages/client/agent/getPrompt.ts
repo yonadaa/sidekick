@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { systems } from "./systems";
+import { systems } from "../src/game/systems";
 
 export type State = {
   players: {

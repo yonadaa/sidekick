@@ -1,4 +1,4 @@
-import { harvestSystem } from "./harvestSystem";
-import { moveSystem } from "./moveSystem";
+import { MoveSystem } from "./moveSystem";
+import { HarvestSystem } from "./harvestSystem";
 
-export const systems = [moveSystem, harvestSystem];
+export const systems = [MoveSystem, HarvestSystem];

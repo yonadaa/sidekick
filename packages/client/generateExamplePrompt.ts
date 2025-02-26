@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { getPrompt } from "./src/game/getPrompt";
+import { getPrompt } from "./agent/getPrompt";
 
 const prompt = getPrompt(
   {

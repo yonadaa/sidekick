@@ -1,16 +1,10 @@
-export const moveSystem = `// SPDX-License-Identifier: MIT
+export const MoveSystem = `// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
 import { Position, PositionData } from "./codegen/tables/Position.sol";
-
-enum Direction {
-  North,
-  East,
-  South,
-  West
-}
+import { Direction } from "./codegen/common.sol";
 
 contract MoveSystem is System {
   function move(Direction direction) public {
@@ -29,4 +23,5 @@ contract MoveSystem is System {
 
     Position.set(player, position);
   }
-}`;
+}
+`

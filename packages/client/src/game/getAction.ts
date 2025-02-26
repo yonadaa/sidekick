@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { Address } from "viem";
-import { getPrompt, State } from "./getPrompt";
+import { getPrompt, State } from "../../agent/getPrompt";
 
 const Output = z.object({
   chainOfThought: z.string(),
