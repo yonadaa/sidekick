@@ -57,7 +57,7 @@ export function Agent() {
       <div className="flex flex-row ">
         <form className="bg-white shadow-md rounded">
           <input
-            className="shadow appearance-none border rounded py-2 px-3 w-full h-16 w-72 text-gray-700 focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded py-2 px-3 h-16 w-72 text-gray-700 focus:outline-none focus:shadow-outline"
             type="text"
             onChange={(event) => {
               setGoal(event.target.value);
