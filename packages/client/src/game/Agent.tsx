@@ -70,7 +70,9 @@ export function Agent() {
           Act<span className="hidden group-aria-busy:inline">ing…</span>
         </AsyncButton>
       </div>
-      <div className="p-2">{reasoning}</div>
+      <div className="p-2" style={{ whiteSpace: "pre-line" }}>
+        {reasoning}
+      </div>
     </div>
   );
 }
