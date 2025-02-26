@@ -25,7 +25,7 @@ export function Spawn({
         onMove ? (
           <div className="absolute inset-0 grid place-items-center">
             <AsyncButton
-              className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg text-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse"
+              className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg text-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse bg-white"
               onClick={() => onMove("North")}
             >
               Spawn<span className="hidden group-aria-busy:inline">ing…</span>
@@ -34,7 +34,7 @@ export function Spawn({
         ) : (
           <div className="absolute inset-0 grid place-items-center">
             <button
-              className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg text-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse"
+              className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg text-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse bg-white"
               onClick={openAccountModal}
             >
               Sign in to play
