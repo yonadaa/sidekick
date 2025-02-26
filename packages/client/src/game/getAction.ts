@@ -114,10 +114,7 @@ ${harvestSystem}
 Your goal:
 ${goal}`;
 
-  console.log(content);
-
   const output = await llm.invoke([content]);
-  console.log(output);
 
   return output;
 }

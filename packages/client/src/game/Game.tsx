@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { Direction } from "../common";
 import { Spawn } from "./Spawn";
 import { useKeyboardMovement } from "./useKeyboardMovement";
+import { Agent } from "./Agent";
 
 export function Game() {
   const sync = useSync();
@@ -40,6 +41,7 @@ export function Game() {
     <div>
       <GameMap />
       <Spawn onMove={onMove} />
+      <Agent />
     </div>
   );
 }

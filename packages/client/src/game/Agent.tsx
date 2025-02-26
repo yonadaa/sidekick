@@ -11,6 +11,7 @@ import { useTrees } from "./useTrees";
 
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
+  const [reasoning, setReasoning] = useState("...");
 
   const sync = useSync();
   const worldContract = useWorldContract();
@@ -41,20 +42,20 @@ export function Agent() {
         await sync.data.waitForTransaction(tx);
       }
       if (action.functionName === "harvest") {
-        const tx = await worldContract.write.app__harvest(
-          action.args as [number, number]
-        );
+        const tx = await worldContract.write.app__harvest();
         await sync.data.waitForTransaction(tx);
       }
+
+      setReasoning(action.chainOfThought);
     }
   }
 
   return (
-    <div>
-      <div className="absolute right-0 bottom-0 grid place-items-center">
+    <div className="absolute left-0 top-0 flex flex-col m-2 border-2 w-96">
+      <div className="flex flex-row ">
         <form className="bg-white shadow-md rounded">
           <input
-            className="shadow appearance-none border rounded w-72 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded py-2 px-3 w-full h-16 w-64 text-gray-700 focus:outline-none focus:shadow-outline"
             type="text"
             onChange={(event) => {
               setGoal(event.target.value);
@@ -63,12 +64,13 @@ export function Agent() {
           />
         </form>
         <AsyncButton
-          className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg text-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse"
+          className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse"
           onClick={onClick}
         >
           Act<span className="hidden group-aria-busy:inline">ing…</span>
         </AsyncButton>
       </div>
+      <div className="p-2">{reasoning}</div>
     </div>
   );
 }
