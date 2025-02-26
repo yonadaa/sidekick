@@ -23,6 +23,12 @@ export function Agent() {
       stash.getRecords({ table: mudConfig.tables.app__Position })
     );
 
+    const woods = Object.values(
+      stash.getRecords({ table: mudConfig.tables.app__Wood })
+    ).map((wood) => {
+      return { player: wood.player, balance: wood.balance.toString() };
+    });
+
     if (sync.data && worldContract && userAddress) {
       const state = {
         players: players.map((player) => ({
@@ -31,6 +37,7 @@ export function Agent() {
           y: player.y,
         })),
         trees,
+        woods,
       };
 
       const output = await getAction(state, userAddress, goal);

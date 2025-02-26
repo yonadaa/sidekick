@@ -5,6 +5,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 
 import { Position, PositionData } from "./codegen/tables/Position.sol";
 import { Tree } from "./codegen/tables/Tree.sol";
+import { Wood } from "./codegen/tables/Wood.sol";
 import { coordinateHasTree } from "./coordinateHasTree.sol";
 
 contract HarvestSystem is System {
@@ -16,5 +17,6 @@ contract HarvestSystem is System {
     require(!Tree.get(position.x, position.y), "Tree already harvested");
 
     Tree.set(position.x, position.y, true);
+    Wood.set(player, Wood.get(player) + 1);
   }
 }

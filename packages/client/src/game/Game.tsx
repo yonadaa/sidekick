@@ -47,11 +47,19 @@ export function Game() {
     (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
   );
 
+  const woods = useRecords({ stash, table: mudConfig.tables.app__Wood });
+  const currentWood = woods.find(
+    (wood) => wood.player.toLowerCase() === userAddress?.toLowerCase()
+  );
+
   return (
     <div>
       <GameMap />
       <Spawn onMove={onMove} />
       {currentPlayer ? <Agent /> : null}
+      <div className="grid place-items-center p-2 text-lg">
+        {currentWood ? Number(currentWood.balance) : 0}🪵
+      </div>
     </div>
   );
 }

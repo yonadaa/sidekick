@@ -12,6 +12,10 @@ type State = {
     x: number;
     y: number;
   }[];
+  woods: {
+    player: Address;
+    balance: string;
+  }[];
 };
 
 const Output = z.object({
