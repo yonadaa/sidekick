@@ -1,7 +1,7 @@
 import { Address } from "viem";
 import { GetRecordsResult } from "@latticexyz/stash/internal";
 import mudConfig from "contracts/mud.config";
-import { systems } from "../src/game/systems";
+import { systems } from "./systems";
 
 export type State = {
   players: GetRecordsResult<

@@ -1,13 +1,14 @@
 import * as fs from "fs";
-import { getPrompt } from "./agent/getPrompt";
+import { getPrompt } from "./src/game/agent/getPrompt";
 
 const prompt = getPrompt(
   {
     players: [
       {
-        player: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        account: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
         x: 2,
         y: 3,
+        woodBalance: 2n,
       },
     ],
     trees: [
@@ -80,12 +81,6 @@ const prompt = getPrompt(
         x: 18,
         y: 12,
         harvested: false,
-      },
-    ],
-    woods: [
-      {
-        player: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-        balance: 2n,
       },
     ],
   },

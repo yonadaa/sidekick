@@ -9,5 +9,5 @@ function renderSystem(name: string) {
 export function writeSystem(name: string) {
   const content = renderSystem(name);
 
-  fs.writeFileSync(`./src/game/${name}.ts`, content);
+  fs.writeFileSync(`./src/game/agent/${name}.ts`, content);
 }

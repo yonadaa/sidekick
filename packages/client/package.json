@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "tsc --noEmit",
     "generate-example-prompt": "tsx generateExamplePrompt.ts",
-    "generate-systems": "tsx ./agent/writeSystems.ts"
+    "generate-systems": "tsx ./src/game/agent/writeSystems.ts"
   },
   "dependencies": {
     "@langchain/anthropic": "^0.3.13",

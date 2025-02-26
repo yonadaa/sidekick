@@ -1,6 +1,6 @@
 import { useRecords } from "@latticexyz/stash/react";
 import mudConfig from "contracts/mud.config";
-import { useTiles } from "./useTiles";
+import { useTiles } from "./utils/useTiles";
 import { stash } from "../mud/stash";
 
 export function GameMap() {

@@ -4,9 +4,9 @@ import { AsyncButton } from "../ui/AsyncButton";
 import mudConfig from "contracts/mud.config";
 import { useAccount } from "wagmi";
 import { useSync } from "@latticexyz/store-sync/react";
-import { getAction, Output } from "./getAction";
+import { getAction, Output } from "./agent/getAction";
 import { useState } from "react";
-import { getTrees } from "./getTrees";
+import { getTrees } from "./utils/getTrees";
 
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
