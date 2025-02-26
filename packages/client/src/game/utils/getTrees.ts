@@ -13,9 +13,7 @@ export function getTrees(xEnd: number, yEnd: number) {
   const trees = lazyTrees.map((tree) => {
     const harvested = harvestedTrees.some(
       (harvestedTree) =>
-        harvestedTree.harvested &&
-        harvestedTree.x === tree.x &&
-        harvestedTree.y === tree.y
+        harvestedTree.x === tree.x && harvestedTree.y === tree.y
     );
     return {
       x: tree.x,
