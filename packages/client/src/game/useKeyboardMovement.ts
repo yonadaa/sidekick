@@ -9,20 +9,25 @@ const keys = new Map<KeyboardEvent["key"], Direction>([
 ]);
 
 export const useKeyboardMovement = (
-  move: undefined | ((direction: Direction) => void)
+  onMove: undefined | ((direction: Direction) => void),
+  onHarvest: undefined | (() => void)
 ) => {
   useEffect(() => {
-    if (!move) return;
+    if (!onMove) return;
+    if (!onHarvest) return;
 
     const listener = (event: KeyboardEvent) => {
+      if (event.key === " ") {
+        onHarvest();
+      }
       const direction = keys.get(event.key);
       if (direction == null) return;
 
       event.preventDefault();
-      move(direction);
+      onMove(direction);
     };
 
     window.addEventListener("keydown", listener);
     return () => window.removeEventListener("keydown", listener);
-  }, [move]);
+  }, [onMove, onHarvest]);
 };

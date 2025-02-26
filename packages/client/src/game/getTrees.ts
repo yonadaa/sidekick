@@ -1,14 +1,13 @@
-import { useRecords } from "@latticexyz/stash/react";
 import mudConfig from "contracts/mud.config";
 import { stash } from "../mud/stash";
 import { coordinateHasTree } from "./coordinateHasTree";
 
-const RANGE = 10;
+const RANGE = 20;
 
-function getTrees() {
+function getBase() {
   const trees: { x: number; y: number; harvested: boolean }[] = [];
-  for (let x = -RANGE; x < RANGE; x++) {
-    for (let y = -RANGE; y < RANGE; y++) {
+  for (let x = 0; x < RANGE; x++) {
+    for (let y = 0; y < RANGE; y++) {
       if (coordinateHasTree(x, y)) {
         trees.push({ x, y, harvested: false });
       }
@@ -18,14 +17,15 @@ function getTrees() {
   return trees;
 }
 
-export const useTrees = () => {
-  const trees = getTrees();
-  const harvestedTrees = useRecords({
-    stash,
-    table: mudConfig.tables.app__Tree,
-  });
+export const getTrees = () => {
+  const trees = getBase();
+  const harvestedTrees = Object.values(
+    stash.getRecords({
+      table: mudConfig.tables.app__Tree,
+    })
+  );
 
-  const gm = trees.map((tree) => {
+  const output = trees.map((tree) => {
     return {
       x: tree.x,
       y: tree.y,
@@ -36,5 +36,5 @@ export const useTrees = () => {
     };
   });
 
-  return gm;
+  return output;
 };

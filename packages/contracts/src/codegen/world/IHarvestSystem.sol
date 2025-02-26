@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IHarvestSystem {
-  function app__harvest(int32 x, int32 y) external;
+  function app__harvest() external;
 }
