@@ -74,8 +74,6 @@ ${system}
 Your goal:
 ${goal}`;
 
-  console.log(content);
-
   const output = await llm.invoke([content]);
 
   return output;
