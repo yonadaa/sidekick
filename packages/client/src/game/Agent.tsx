@@ -18,23 +18,14 @@ export function Agent() {
 
   async function onClick() {
     const players = Object.values(
-      stash.getRecords({ table: mudConfig.tables.app__Position })
-    );
-
-    const woods = Object.values(
-      stash.getRecords({ table: mudConfig.tables.app__Wood })
+      stash.getRecords({ table: mudConfig.tables.app__Player })
     );
 
     const trees = getTrees();
 
     if (sync.data && worldContract && userAddress) {
       const state = {
-        players: players.map((player) => ({
-          player: player.player,
-          x: player.x,
-          y: player.y,
-        })),
-        woods,
+        players,
         trees,
       };
 

@@ -14,9 +14,9 @@ export function Spawn({
   const { openAccountModal } = useAccountModal();
   const { address: userAddress } = useAccount();
 
-  const players = useRecords({ stash, table: mudConfig.tables.app__Position });
+  const players = useRecords({ stash, table: mudConfig.tables.app__Player });
   const currentPlayer = players.find(
-    (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
+    (player) => player.account.toLowerCase() === userAddress?.toLowerCase()
   );
 
   return (

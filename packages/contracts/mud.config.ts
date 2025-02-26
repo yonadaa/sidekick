@@ -6,13 +6,9 @@ export default defineWorld({
     Direction: ["North", "East", "South", "West"],
   },
   tables: {
-    Position: {
-      schema: { player: "address", x: "int32", y: "int32" },
-      key: ["player"],
-    },
-    Wood: {
-      schema: { player: "address", balance: "uint256" },
-      key: ["player"],
+    Player: {
+      schema: { account: "address", x: "int32", y: "int32", woodBalance: "uint256" },
+      key: ["account"],
     },
     Tree: {
       schema: { x: "int32", y: "int32", harvested: "bool" },

@@ -5,19 +5,18 @@ import { systems } from "../src/game/systems";
 
 export type State = {
   players: GetRecordsResult<
-    typeof mudConfig.tables.app__Position
-  >[keyof typeof mudConfig.tables.app__Position][];
-  woods: GetRecordsResult<
-    typeof mudConfig.tables.app__Wood
-  >[keyof typeof mudConfig.tables.app__Wood][];
+    typeof mudConfig.tables.app__Player
+  >[keyof typeof mudConfig.tables.app__Player][];
   trees: GetRecordsResult<
     typeof mudConfig.tables.app__Tree
   >[keyof typeof mudConfig.tables.app__Tree][];
 };
 
 export function getPrompt(state: State, playerAddress: Address, goal: string) {
-  //@ts-expect-error readonly property
-  state.woods.map((wood) => (wood.balance = wood.balance.toString()));
+  state.players.map(
+    //@ts-expect-error readonly property
+    (player) => (player.woodBalance = player.woodBalance.toString())
+  );
 
   return `
 Your task is to control a player in a game. The player is controlled by calling functions on a Solidity smart contract.

@@ -4,7 +4,7 @@ import { useTiles } from "./useTiles";
 import { stash } from "../mud/stash";
 
 export function GameMap() {
-  const players = useRecords({ stash, table: mudConfig.tables.app__Position });
+  const players = useRecords({ stash, table: mudConfig.tables.app__Player });
 
   const tiles = useTiles();
 
