@@ -22,11 +22,8 @@ export function Agent() {
     const players = Object.values(
       stash.getRecords({ table: mudConfig.tables.app__Position })
     );
-    const currentPlayer = players.find(
-      (player) => player.player.toLowerCase() === userAddress?.toLowerCase()
-    );
 
-    if (sync.data && worldContract && userAddress && currentPlayer) {
+    if (sync.data && worldContract && userAddress) {
       const state = {
         players: players.map((player) => ({
           player: player.player,
