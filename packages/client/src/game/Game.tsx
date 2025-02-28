@@ -11,6 +11,7 @@ import { Agent } from "./Agent";
 import { useAccount } from "wagmi";
 import { useRecords } from "@latticexyz/stash/react";
 import { Address } from "viem";
+import { WoodBalance } from "./WoodBalance";
 
 export function Game() {
   const sync = useSync();
@@ -64,9 +65,7 @@ export function Game() {
       <GameMap />
       <Spawn onMove={onMove} />
       {currentPlayer ? <Agent /> : null}
-      <div className="grid place-items-center p-2 text-lg">
-        {currentPlayer ? currentPlayer.woodBalance.toString() : "0"}🪵
-      </div>
+      {currentPlayer ? <WoodBalance /> : null}
     </div>
   );
 }
