@@ -51,7 +51,10 @@ function StateDisplay({ state, output, hash }: StateDisplayProps) {
           </div>
           {hashDisplay}
         </div>
-        <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+        <div
+          className="p-2 border-2 h-48 overflow-y-auto"
+          style={{ whiteSpace: "pre-line" }}
+        >
           {bodyContent}
         </div>
       </div>
