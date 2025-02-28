@@ -1,11 +1,11 @@
 import { getTiles } from "./getTiles";
 import { useTrees } from "./useTrees";
 
-const END = 20;
-
+const X_END = 40;
+const Y_END = 20;
 export function useTiles() {
-  const tiles = getTiles(END, END);
-  const trees = useTrees(END, END);
+  const tiles = getTiles(X_END, Y_END);
+  const trees = useTrees(X_END, Y_END);
 
   const finishedTiles = tiles.map((tile) => {
     return {
