@@ -1,86 +1,198 @@
 import { stash } from "../mud/stash";
 import { useWorldContract } from "../mud/useWorldContract";
-import { AsyncButton } from "../ui/AsyncButton";
 import mudConfig from "contracts/mud.config";
 import { useAccount } from "wagmi";
 import { useSync } from "@latticexyz/store-sync/react";
 import { getAction, Output } from "./agent/getAction";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getTrees } from "./utils/getTrees";
+import { Hex } from "viem";
+import { TruncatedHex } from "./TruncatedHex";
+import { CheckCheckIcon, Pause, Play } from "lucide-react";
+import { Skeleton } from "./Skeleton";
+
+enum State {
+  Empty,
+  Idle,
+  Thinking,
+  Sending,
+  Waiting,
+}
+
+function formatCall({
+  functionName,
+  args,
+}: {
+  functionName: string;
+  args: unknown[];
+}) {
+  return `${functionName}(${args.toString()})`;
+}
 
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
+  const [state, setState] = useState(State.Empty);
   const [output, setOutput] = useState<Output>();
+  const [hash, setHash] = useState<Hex>();
+  const [started, setStarted] = useState(false);
 
   const sync = useSync();
   const worldContract = useWorldContract();
   const { address: userAddress } = useAccount();
 
-  async function onClick() {
-    const players = Object.values(
-      stash.getRecords({ table: mudConfig.tables.app__Player })
-    );
+  useEffect(() => {
+    async function doAction() {
+      if (
+        (state === State.Empty || state === State.Idle) &&
+        started &&
+        sync.data &&
+        worldContract &&
+        userAddress
+      ) {
+        setState(State.Thinking);
 
-    const trees = getTrees(20, 20);
+        const players = Object.values(
+          stash.getRecords({ table: mudConfig.tables.app__Player })
+        );
 
-    if (sync.data && worldContract && userAddress) {
-      const state = {
-        players,
-        trees,
-      };
+        const trees = getTrees(20, 20);
 
-      const output = await getAction(state, userAddress, goal);
+        const state = {
+          players,
+          trees,
+        };
 
-      const functionName = `app__${output.functionName}`;
-      // @ts-expect-error functionName is not specific
-      const tx = await worldContract.write[functionName](output.args);
-      await sync.data.waitForTransaction(tx);
+        const output = await getAction(state, userAddress, goal);
 
-      setOutput(output);
+        setOutput(output);
+        setState(State.Sending);
+
+        const functionName = `app__${output.functionName}`;
+        // @ts-expect-error functionName is not specific
+        const tx: Hex = await worldContract.write[functionName](output.args);
+
+        setHash(tx);
+        setState(State.Waiting);
+
+        await sync.data.waitForTransaction(tx);
+
+        setState(State.Idle);
+      }
     }
-  }
+    doAction();
+  }, [goal, started, state, sync.data, userAddress, worldContract]);
 
   return (
     <div className="absolute left-0 top-0 flex flex-col m-2 border-2 w-96">
-      <div className="flex flex-row ">
-        <form className="bg-white shadow-md rounded">
-          <input
-            className="shadow appearance-none border rounded py-2 px-3 h-16 w-72 text-gray-700 focus:outline-none focus:shadow-outline"
-            type="text"
-            onChange={(event) => {
-              setGoal(event.target.value);
-            }}
-            value={goal}
-          />
-        </form>
-        <AsyncButton
-          className="group outline-0 p-4 border-4 border-green-400 transition ring-green-300 hover:ring-4 active:scale-95 rounded-lg font-medium aria-busy:pointer-events-none aria-busy:animate-pulse"
-          onClick={onClick}
+      <div className="flex flex-row">
+        <input
+          className="flex-grow border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-800 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed"
+          type="text"
+          disabled={
+            started ||
+            state === State.Thinking ||
+            state === State.Sending ||
+            state === State.Waiting
+          }
+          onChange={(event) => setGoal(event.target.value)}
+          value={goal}
+        />
+        <button
+          className={`${
+            started
+              ? "bg-red-500 hover:bg-red-600"
+              : "bg-green-500 hover:bg-green-600"
+          } text-white font-semibold py-2 px-4 rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap`}
+          disabled={
+            !started &&
+            (state === State.Thinking ||
+              state === State.Sending ||
+              state === State.Waiting)
+          }
+          onClick={() => setStarted(!started)}
         >
-          Act<span className="hidden group-aria-busy:inline">ing…</span>
-        </AsyncButton>
+          {started ? <Pause /> : <Play />}
+        </button>
       </div>
-      {output ? (
-        <div>
-          <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-            {output.chainOfThought}
+
+      <div>
+        {state === State.Empty ? (
+          <div>
+            <div className="flex justify-between p-2 border-2">
+              <div className="flex">
+                <div>
+                  <Skeleton className="h-4 bg-gray-300 w-32 animate-none" />
+                </div>
+                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+              </div>
+              <div>
+                <Skeleton className="h-4 bg-gray-300 w-32 animate-none" />
+              </div>
+            </div>
+            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+              Awaiting input...
+            </div>
           </div>
-          <div className="p-2 border-2">
-            <div>{`functionName: ${output.functionName}`}</div>
-            <div>{`args: [${output.args.toString()}]`}</div>
+        ) : state === State.Idle ? (
+          <div>
+            <div className="flex justify-between p-2 border-2">
+              <div className="flex">
+                <div className="flex">{output ? formatCall(output) : null}</div>
+                <CheckCheckIcon className="ml-2 w-4 text-green-400" />
+              </div>
+              <TruncatedHex hex={hash as Hex} />
+            </div>
+            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+              {output?.chainOfThought}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div>
-          <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-            ...
+        ) : state === State.Thinking ? (
+          <div>
+            <div className="flex justify-between p-2 border-2">
+              <div className="flex">
+                <div>
+                  <Skeleton className="h-4 bg-gray-300 w-32" />
+                </div>
+                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+              </div>
+              <div>
+                <Skeleton className="h-4 bg-gray-300 w-32" />
+              </div>
+            </div>
+            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+              Thinking...
+            </div>
           </div>
-          <div className="p-2 border-2">
-            <div>{`functionName: ...`}</div>
-            <div>{`args: ...`}</div>
+        ) : state === State.Sending ? (
+          <div>
+            <div className="flex justify-between p-2 border-2">
+              <div className="flex">
+                <div>{output ? formatCall(output) : null}</div>
+                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+              </div>
+              <div>
+                <Skeleton className="h-4 bg-gray-300 w-32" />
+              </div>
+            </div>
+            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+              {output?.chainOfThought}
+            </div>
           </div>
-        </div>
-      )}
+        ) : state === State.Waiting ? (
+          <div>
+            <div className="flex justify-between p-2 border-2">
+              <div className="flex">
+                <div className="flex">{output ? formatCall(output) : null}</div>
+                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+              </div>
+              <TruncatedHex hex={hash as Hex} />
+            </div>
+            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+              {output?.chainOfThought}
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
