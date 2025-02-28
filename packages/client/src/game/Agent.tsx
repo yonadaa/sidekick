@@ -26,7 +26,13 @@ function formatCall({
   functionName: string;
   args: unknown[];
 }) {
-  return `${functionName}(${args.toString()})`;
+  const truncateArg = (arg: unknown) => {
+    const str = String(arg);
+    return str.length > 20 ? `${str.substring(0, 17)}...` : str;
+  };
+
+  const truncatedArgs = args.map(truncateArg);
+  return `${functionName}(${truncatedArgs.toString()})`;
 }
 
 interface StateDisplayProps {
