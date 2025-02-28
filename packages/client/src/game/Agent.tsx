@@ -139,7 +139,7 @@ export function Agent() {
                 <div>
                   <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
                 </div>
-                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
               </div>
               <div>
                 <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
@@ -169,7 +169,7 @@ export function Agent() {
                 <div>
                   <Skeleton className="h-4 bg-gray-300 w-32" />
                 </div>
-                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
               </div>
               <div>
                 <Skeleton className="h-4 bg-gray-300 w-32" />
@@ -184,7 +184,7 @@ export function Agent() {
             <div className="flex justify-between p-2 border-2">
               <div className="flex">
                 <div>{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
               </div>
               <div>
                 <Skeleton className="h-4 bg-gray-300 w-32" />
@@ -199,7 +199,7 @@ export function Agent() {
             <div className="flex justify-between p-2 border-2">
               <div className="flex">
                 <div className="flex">{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
+                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
               </div>
               <TruncatedHex hex={hash as Hex} />
             </div>
