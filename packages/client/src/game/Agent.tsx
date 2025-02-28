@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getTrees } from "./utils/getTrees";
 import { Hex } from "viem";
 import { TruncatedHex } from "./TruncatedHex";
-import { CheckCheckIcon, Pause, Play, RedoDot } from "lucide-react";
+import { CheckCheckIcon, Play, RedoDot, Square } from "lucide-react";
 import { Skeleton } from "./Skeleton";
 
 enum State {
@@ -26,7 +26,92 @@ function formatCall({
   functionName: string;
   args: unknown[];
 }) {
-  return `${functionName}(${args.toString()})`;
+  const truncateArg = (arg: unknown) => {
+    const str = String(arg);
+    return str.length > 20 ? `${str.substring(0, 17)}...` : str;
+  };
+
+  const truncatedArgs = args.map(truncateArg);
+  return `${functionName}(${truncatedArgs.toString()})`;
+}
+
+interface StateDisplayProps {
+  state: State;
+  output?: Output;
+  hash?: Hex;
+}
+
+function StateDisplay({ state, output, hash }: StateDisplayProps) {
+  const renderContent = () => {
+    const commonLayout = (
+      callDisplay: React.ReactNode,
+      checkIconColor: string,
+      hashDisplay: React.ReactNode,
+      bodyContent: React.ReactNode
+    ) => (
+      <div>
+        <div className="flex justify-between p-2 border-2">
+          <div className="flex">
+            <div className="flex">{callDisplay}</div>
+            <CheckCheckIcon className={`ml-2 w-4 ${checkIconColor}`} />
+          </div>
+          {hashDisplay}
+        </div>
+        <div
+          className="p-2 border-2 h-48 overflow-y-auto"
+          style={{ whiteSpace: "pre-line" }}
+        >
+          {bodyContent}
+        </div>
+      </div>
+    );
+
+    const skeletonElement = <Skeleton className="h-4 bg-gray-300 w-32" />;
+    const callElement = output ? formatCall(output) : null;
+    const hashElement = hash ? <TruncatedHex hex={hash} /> : null;
+
+    switch (state) {
+      case State.Empty:
+        return commonLayout(
+          <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />,
+          "text-gray-400",
+          <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />,
+          "Awaiting input..."
+        );
+      case State.Idle:
+        return commonLayout(
+          callElement,
+          "text-green-400",
+          hashElement,
+          output?.chainOfThought
+        );
+      case State.Thinking:
+        return commonLayout(
+          skeletonElement,
+          "text-gray-400",
+          skeletonElement,
+          "Thinking..."
+        );
+      case State.Sending:
+        return commonLayout(
+          callElement,
+          "text-gray-400",
+          skeletonElement,
+          output?.chainOfThought
+        );
+      case State.Waiting:
+        return commonLayout(
+          callElement,
+          "text-gray-400",
+          hashElement,
+          output?.chainOfThought
+        );
+      default:
+        return null;
+    }
+  };
+
+  return renderContent();
 }
 
 export function Agent() {
@@ -85,7 +170,7 @@ export function Agent() {
   }, [goal, started, state, step, sync.data, userAddress, worldContract]);
 
   return (
-    <div className="absolute left-0 top-0 flex flex-col m-2 border-2 w-96">
+    <div className="absolute left-0 top-0 flex flex-col m-2 border-2 w-96 bg-white">
       <div className="flex flex-row">
         <input
           className="flex-grow border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-800 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed"
@@ -105,7 +190,7 @@ export function Agent() {
             started
               ? "bg-red-500 hover:bg-red-600"
               : "bg-green-500 hover:bg-green-600"
-          } text-white font-semibold py-2 px-4 rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap`}
+          } text-white font-semibold rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap w-11 h-11 flex items-center justify-center`}
           disabled={
             !started &&
             (state === State.Thinking ||
@@ -114,11 +199,11 @@ export function Agent() {
           }
           onClick={() => setStarted(!started)}
         >
-          {started ? <Pause /> : <Play />}
+          {started ? <Square size={20} /> : <Play size={24} />}
         </button>
         <button
           title="Step through"
-          className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap"
+          className="bg-blue-400 hover:bg-blue-500 text-white font-semibold rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap w-11 h-11 flex items-center justify-center"
           disabled={
             started ||
             state === State.Thinking ||
@@ -127,87 +212,12 @@ export function Agent() {
           }
           onClick={() => setStep(true)}
         >
-          <RedoDot />
+          <RedoDot size={24} />
         </button>
       </div>
 
       <div>
-        {state === State.Empty ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div>
-                  <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
-                </div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <div>
-                <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
-              </div>
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              Awaiting input...
-            </div>
-          </div>
-        ) : state === State.Idle ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div className="flex">{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 w-4 text-green-400" />
-              </div>
-              <TruncatedHex hex={hash as Hex} />
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              {output?.chainOfThought}
-            </div>
-          </div>
-        ) : state === State.Thinking ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div>
-                  <Skeleton className="h-4 bg-gray-300 w-32" />
-                </div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <div>
-                <Skeleton className="h-4 bg-gray-300 w-32" />
-              </div>
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              Thinking...
-            </div>
-          </div>
-        ) : state === State.Sending ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div>{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <div>
-                <Skeleton className="h-4 bg-gray-300 w-32" />
-              </div>
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              {output?.chainOfThought}
-            </div>
-          </div>
-        ) : state === State.Waiting ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div className="flex">{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <TruncatedHex hex={hash as Hex} />
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              {output?.chainOfThought}
-            </div>
-          </div>
-        ) : null}
+        <StateDisplay state={state} output={output} hash={hash} />
       </div>
     </div>
   );

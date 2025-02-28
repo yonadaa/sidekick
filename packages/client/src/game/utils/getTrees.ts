@@ -2,8 +2,8 @@ import mudConfig from "contracts/mud.config";
 import { stash } from "../../mud/stash";
 import { getLazyTrees } from "./getLazyTrees";
 
-export function getTrees(xEnd: number, yEnd: number) {
-  const lazyTrees = getLazyTrees(xEnd, yEnd);
+export function getTrees(xSize: number, ySize: number) {
+  const lazyTrees = getLazyTrees(xSize, ySize);
   const harvestedTrees = Object.values(
     stash.getRecords({
       table: mudConfig.tables.app__Tree,

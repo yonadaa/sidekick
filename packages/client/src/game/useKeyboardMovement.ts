@@ -24,11 +24,12 @@ export const useKeyboardMovement = (
     if (!onHarvest) return;
     if (!onSteal) return;
 
-    const listener = (event: KeyboardEvent) => {
+    const keyListener = (event: KeyboardEvent) => {
       // Ignore keyboard events when an input element is focused
       if (event.target instanceof HTMLInputElement) return;
 
       if (event.key === " ") {
+        event.preventDefault(); // Prevent spacebar from scrolling
         onHarvest();
       } else if (event.key === "k") {
         const players = Object.values(
@@ -55,7 +56,7 @@ export const useKeyboardMovement = (
       onMove(direction);
     };
 
-    window.addEventListener("keydown", listener);
-    return () => window.removeEventListener("keydown", listener);
+    window.addEventListener("keydown", keyListener);
+    return () => window.removeEventListener("keydown", keyListener);
   }, [onMove, onHarvest, onSteal, userAddress]);
 };

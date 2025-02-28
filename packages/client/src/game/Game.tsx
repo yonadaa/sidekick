@@ -11,11 +11,16 @@ import { Agent } from "./Agent";
 import { useAccount } from "wagmi";
 import { useRecords } from "@latticexyz/stash/react";
 import { Address } from "viem";
+import { WoodBalance } from "./WoodBalance";
+import { usePreventScroll } from "./utils/usePreventScroll";
 
 export function Game() {
   const sync = useSync();
   const worldContract = useWorldContract();
   const { address: userAddress } = useAccount();
+
+  // Prevent scrolling in the game
+  usePreventScroll();
 
   const onMove = useMemo(
     () =>
@@ -64,9 +69,7 @@ export function Game() {
       <GameMap />
       <Spawn onMove={onMove} />
       {currentPlayer ? <Agent /> : null}
-      <div className="grid place-items-center p-2 text-lg">
-        {currentPlayer ? currentPlayer.woodBalance.toString() : "0"}🪵
-      </div>
+      {currentPlayer ? <WoodBalance /> : null}
     </div>
   );
 }
