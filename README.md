@@ -1,3 +1,7 @@
 # World of Agents
-Play this onchain game yourself, or delegate control to an AI using natural language. 
-<img width="1470" alt="image" src="https://github.com/user-attachments/assets/ae30be8c-0aad-4795-9528-a1986d956cb6" />
+Your AI assistant for playing onchain games:
+- Fully autonomous. Give the agent a goal in natural language, and it will continuously reason and send transactions without any further intervention.
+- Minimal setup. Simply provide a contract's source code and storage - the agent figures out how to accomplish your goal. 
+- Precise control. The agent runs in the game client, so you can stop and start it at will, generate individual transactions, or just control the player yourself.
+
+https://github.com/user-attachments/assets/10b486b3-f0b2-4bdd-a666-c3b3fb0a6434
