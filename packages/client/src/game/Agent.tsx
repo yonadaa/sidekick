@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getTrees } from "./utils/getTrees";
 import { Hex } from "viem";
 import { TruncatedHex } from "./TruncatedHex";
-import { CheckCheckIcon, Pause, Play } from "lucide-react";
+import { CheckCheckIcon, Pause, Play, StepForward } from "lucide-react";
 import { Skeleton } from "./Skeleton";
 
 enum State {
@@ -35,6 +35,7 @@ export function Agent() {
   const [output, setOutput] = useState<Output>();
   const [hash, setHash] = useState<Hex>();
   const [started, setStarted] = useState(false);
+  const [step, setStep] = useState(false);
 
   const sync = useSync();
   const worldContract = useWorldContract();
@@ -44,7 +45,7 @@ export function Agent() {
     async function doAction() {
       if (
         (state === State.Empty || state === State.Idle) &&
-        started &&
+        (started || step) &&
         sync.data &&
         worldContract &&
         userAddress
@@ -77,10 +78,11 @@ export function Agent() {
         await sync.data.waitForTransaction(tx);
 
         setState(State.Idle);
+        setStep(false);
       }
     }
     doAction();
-  }, [goal, started, state, sync.data, userAddress, worldContract]);
+  }, [goal, started, state, step, sync.data, userAddress, worldContract]);
 
   return (
     <div className="absolute left-0 top-0 flex flex-col m-2 border-2 w-96">
@@ -98,6 +100,7 @@ export function Agent() {
           value={goal}
         />
         <button
+          title="Play"
           className={`${
             started
               ? "bg-red-500 hover:bg-red-600"
@@ -113,6 +116,19 @@ export function Agent() {
         >
           {started ? <Pause /> : <Play />}
         </button>
+        <button
+          title="Step through"
+          className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap"
+          disabled={
+            started ||
+            state === State.Thinking ||
+            state === State.Sending ||
+            state === State.Waiting
+          }
+          onClick={() => setStep(true)}
+        >
+          {started ? <StepForward /> : <StepForward />}
+        </button>
       </div>
 
       <div>
@@ -121,12 +137,12 @@ export function Agent() {
             <div className="flex justify-between p-2 border-2">
               <div className="flex">
                 <div>
-                  <Skeleton className="h-4 bg-gray-300 w-32 animate-none" />
+                  <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
                 </div>
                 <CheckCheckIcon className="ml-2 h-4 w-4 text-gray-400" />
               </div>
               <div>
-                <Skeleton className="h-4 bg-gray-300 w-32 animate-none" />
+                <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
               </div>
             </div>
             <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
