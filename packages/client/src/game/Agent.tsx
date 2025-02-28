@@ -29,6 +29,82 @@ function formatCall({
   return `${functionName}(${args.toString()})`;
 }
 
+interface StateDisplayProps {
+  state: State;
+  output?: Output;
+  hash?: Hex;
+}
+
+function StateDisplay({ state, output, hash }: StateDisplayProps) {
+  const renderContent = () => {
+    const commonLayout = (
+      callDisplay: React.ReactNode,
+      checkIconColor: string,
+      hashDisplay: React.ReactNode,
+      bodyContent: React.ReactNode
+    ) => (
+      <div>
+        <div className="flex justify-between p-2 border-2">
+          <div className="flex">
+            <div className="flex">{callDisplay}</div>
+            <CheckCheckIcon className={`ml-2 w-4 ${checkIconColor}`} />
+          </div>
+          {hashDisplay}
+        </div>
+        <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
+          {bodyContent}
+        </div>
+      </div>
+    );
+
+    const skeletonElement = <Skeleton className="h-4 bg-gray-300 w-32" />;
+    const callElement = output ? formatCall(output) : null;
+    const hashElement = hash ? <TruncatedHex hex={hash} /> : null;
+
+    switch (state) {
+      case State.Empty:
+        return commonLayout(
+          <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />,
+          "text-gray-400",
+          <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />,
+          "Awaiting input..."
+        );
+      case State.Idle:
+        return commonLayout(
+          callElement,
+          "text-green-400",
+          hashElement,
+          output?.chainOfThought
+        );
+      case State.Thinking:
+        return commonLayout(
+          skeletonElement,
+          "text-gray-400",
+          skeletonElement,
+          "Thinking..."
+        );
+      case State.Sending:
+        return commonLayout(
+          callElement,
+          "text-gray-400",
+          skeletonElement,
+          output?.chainOfThought
+        );
+      case State.Waiting:
+        return commonLayout(
+          callElement,
+          "text-gray-400",
+          hashElement,
+          output?.chainOfThought
+        );
+      default:
+        return null;
+    }
+  };
+
+  return renderContent();
+}
+
 export function Agent() {
   const [goal, setGoal] = useState("Move towards the closest tree.");
   const [state, setState] = useState(State.Empty);
@@ -132,82 +208,7 @@ export function Agent() {
       </div>
 
       <div>
-        {state === State.Empty ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div>
-                  <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
-                </div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <div>
-                <Skeleton className="h-4 bg-gray-200 w-32 animate-none" />
-              </div>
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              Awaiting input...
-            </div>
-          </div>
-        ) : state === State.Idle ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div className="flex">{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 w-4 text-green-400" />
-              </div>
-              <TruncatedHex hex={hash as Hex} />
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              {output?.chainOfThought}
-            </div>
-          </div>
-        ) : state === State.Thinking ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div>
-                  <Skeleton className="h-4 bg-gray-300 w-32" />
-                </div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <div>
-                <Skeleton className="h-4 bg-gray-300 w-32" />
-              </div>
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              Thinking...
-            </div>
-          </div>
-        ) : state === State.Sending ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div>{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <div>
-                <Skeleton className="h-4 bg-gray-300 w-32" />
-              </div>
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              {output?.chainOfThought}
-            </div>
-          </div>
-        ) : state === State.Waiting ? (
-          <div>
-            <div className="flex justify-between p-2 border-2">
-              <div className="flex">
-                <div className="flex">{output ? formatCall(output) : null}</div>
-                <CheckCheckIcon className="ml-2 w-4 text-gray-400" />
-              </div>
-              <TruncatedHex hex={hash as Hex} />
-            </div>
-            <div className="p-2 border-2" style={{ whiteSpace: "pre-line" }}>
-              {output?.chainOfThought}
-            </div>
-          </div>
-        ) : null}
+        <StateDisplay state={state} output={output} hash={hash} />
       </div>
     </div>
   );
