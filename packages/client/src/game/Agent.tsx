@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getTrees } from "./utils/getTrees";
 import { Hex } from "viem";
 import { TruncatedHex } from "./TruncatedHex";
-import { CheckCheckIcon, Pause, Play, RedoDot } from "lucide-react";
+import { CheckCheckIcon, Play, RedoDot, Square } from "lucide-react";
 import { Skeleton } from "./Skeleton";
 
 enum State {
@@ -199,7 +199,7 @@ export function Agent() {
           }
           onClick={() => setStarted(!started)}
         >
-          {started ? <Pause /> : <Play />}
+          {started ? <Square size={18} /> : <Play />}
         </button>
         <button
           title="Step through"
