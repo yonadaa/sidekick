@@ -190,7 +190,7 @@ export function Agent() {
             started
               ? "bg-red-500 hover:bg-red-600"
               : "bg-green-500 hover:bg-green-600"
-          } text-white font-semibold py-2 px-4 rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap`}
+          } text-white font-semibold rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap w-11 h-11 flex items-center justify-center`}
           disabled={
             !started &&
             (state === State.Thinking ||
@@ -199,11 +199,11 @@ export function Agent() {
           }
           onClick={() => setStarted(!started)}
         >
-          {started ? <Square size={18} /> : <Play />}
+          {started ? <Square size={20} /> : <Play size={24} />}
         </button>
         <button
           title="Step through"
-          className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap"
+          className="bg-blue-400 hover:bg-blue-500 text-white font-semibold rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-100 disabled:cursor-not-allowed disabled:hover:bg-gray-400 whitespace-nowrap w-11 h-11 flex items-center justify-center"
           disabled={
             started ||
             state === State.Thinking ||
@@ -212,7 +212,7 @@ export function Agent() {
           }
           onClick={() => setStep(true)}
         >
-          <RedoDot />
+          <RedoDot size={24} />
         </button>
       </div>
 
