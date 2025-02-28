@@ -8,10 +8,13 @@ type Tile = {
   };
 };
 
-export function getTiles(xEnd: number, yEnd: number) {
+export function getTiles(xSize: number, ySize: number) {
   const tiles: Tile[] = [];
-  for (let x = 0; x < xEnd; x++) {
-    for (let y = 0; y < yEnd; y++) {
+  const xStart = -Math.floor(xSize / 2);
+  const yStart = -Math.floor(ySize / 2);
+
+  for (let x = xStart; x < xStart + xSize; x++) {
+    for (let y = yStart; y < yStart + ySize; y++) {
       tiles.push({ x, y });
     }
   }

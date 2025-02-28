@@ -36,8 +36,8 @@ export function GameMap() {
               key={`${x},${y}`}
               className="w-8 h-8 flex items-center justify-center"
               style={{
-                gridColumn: x + 1,
-                gridRow: -(y + 1),
+                gridColumn: x + Math.floor(xTiles / 2) + 1,
+                gridRow: Math.floor(yTiles / 2) - y,
               }}
             >
               <div className="flex flex-wrap gap-1 items-center justify-center relative">

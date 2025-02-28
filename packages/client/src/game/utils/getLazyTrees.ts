@@ -6,10 +6,13 @@ type LazyTree = {
   harvested: false;
 };
 
-export function getLazyTrees(xEnd: number, yEnd: number) {
+export function getLazyTrees(xSize: number, ySize: number) {
   const lazyTrees: LazyTree[] = [];
-  for (let x = 0; x < xEnd; x++) {
-    for (let y = 0; y < yEnd; y++) {
+  const xStart = -Math.floor(xSize / 2);
+  const yStart = -Math.floor(ySize / 2);
+
+  for (let x = xStart; x < xStart + xSize; x++) {
+    for (let y = yStart; y < yStart + ySize; y++) {
       if (coordinateHasTree(x, y)) {
         lazyTrees.push({ x, y, harvested: false });
       }
