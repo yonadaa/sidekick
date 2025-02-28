@@ -1,11 +1,11 @@
 import { getTiles } from "./getTiles";
 import { useTrees } from "./useTrees";
+import { useGridDimensions } from "./useGridDimensions";
 
-const X_END = 40;
-const Y_END = 20;
 export function useTiles() {
-  const tiles = getTiles(X_END, Y_END);
-  const trees = useTrees(X_END, Y_END);
+  const { xTiles, yTiles } = useGridDimensions();
+  const tiles = getTiles(xTiles, yTiles);
+  const trees = useTrees(xTiles, yTiles);
 
   const finishedTiles = tiles.map((tile) => {
     return {

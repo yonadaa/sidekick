@@ -2,14 +2,15 @@ import { useRecords } from "@latticexyz/stash/react";
 import mudConfig from "contracts/mud.config";
 import { useTiles } from "./utils/useTiles";
 import { stash } from "../mud/stash";
+import { useGridDimensions } from "./utils/useGridDimensions";
 
 export function GameMap() {
   const players = useRecords({ stash, table: mudConfig.tables.app__Player });
-
+  const { xTiles, yTiles } = useGridDimensions();
   const tiles = useTiles();
 
   return (
-    <div className="p-2">
+    <div className="w-full h-screen flex items-center justify-center">
       <div
         className="inline-grid bg-lime-500 relative overflow-hidden"
         style={{
@@ -19,6 +20,8 @@ export function GameMap() {
           `,
           backgroundSize: "2rem 2rem",
           backgroundPosition: "0 0",
+          width: `${xTiles * 2}rem`,
+          height: `${yTiles * 2}rem`,
         }}
       >
         {tiles.map((tile) => {
