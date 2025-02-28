@@ -29,6 +29,7 @@ export const useKeyboardMovement = (
       if (event.target instanceof HTMLInputElement) return;
 
       if (event.key === " ") {
+        event.preventDefault(); // Prevent spacebar from scrolling
         onHarvest();
       } else if (event.key === "k") {
         const players = Object.values(
