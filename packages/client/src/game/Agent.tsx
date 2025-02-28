@@ -8,14 +8,7 @@ import { useEffect, useState } from "react";
 import { getTrees } from "./utils/getTrees";
 import { Hex } from "viem";
 import { TruncatedHex } from "./TruncatedHex";
-import {
-  CheckCheckIcon,
-  Pause,
-  Play,
-  Redo,
-  RedoDot,
-  StepForward,
-} from "lucide-react";
+import { CheckCheckIcon, Pause, Play, RedoDot } from "lucide-react";
 import { Skeleton } from "./Skeleton";
 
 enum State {

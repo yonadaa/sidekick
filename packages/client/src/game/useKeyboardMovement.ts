@@ -25,6 +25,9 @@ export const useKeyboardMovement = (
     if (!onSteal) return;
 
     const listener = (event: KeyboardEvent) => {
+      // Ignore keyboard events when an input element is focused
+      if (event.target instanceof HTMLInputElement) return;
+
       if (event.key === " ") {
         onHarvest();
       } else if (event.key === "k") {
