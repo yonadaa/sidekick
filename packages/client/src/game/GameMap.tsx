@@ -13,6 +13,17 @@ import {
 
 const EMOJIS = ["🧑‍🌾", "👩‍🌾", "👨‍🌾"];
 
+// Generate a unique color based on the player's address
+function getPlayerColor(address: Address) {
+  const hash = keccak256(
+    encodeAbiParameters(parseAbiParameters("address"), [address])
+  );
+
+  // Use the hash to generate HSL color values
+  const hue = Number(hexToBigInt(hash) % 360n); // 0-359 degrees
+  return `hsl(${hue}, 70%, 65%)`; // Fixed saturation and lightness for good visibility
+}
+
 function getEmoji(address: Address) {
   const hash = keccak256(
     encodeAbiParameters(parseAbiParameters("address"), [address])
@@ -61,12 +72,19 @@ export function GameMap() {
                 )}
                 {player && (
                   <div>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm bg-white px-1 rounded border flex items-center z-10">
+                    <div className="absolute inset-0 flex items-center justify-center text-2xl">
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center"
+                        style={{
+                          backgroundColor: getPlayerColor(player.account),
+                        }}
+                      >
+                        {getEmoji(player.account)}
+                      </div>
+                    </div>
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm bg-white px-1 rounded border flex items-center z-20">
                       <span>{player.woodBalance.toString()}</span>
                       <span className="ml-0.5">🪵</span>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center text-2xl z-10">
-                      {getEmoji(player.account)}
                     </div>
                   </div>
                 )}
