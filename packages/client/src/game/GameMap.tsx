@@ -40,19 +40,28 @@ export function GameMap() {
                 gridRow: Math.floor(yTiles / 2) - y,
               }}
             >
-              <div className="flex flex-wrap gap-1 items-center justify-center relative">
+              <div className="relative w-full h-full">
                 {tree && (
                   <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none">
                     {tree.harvested ? "🍂" : "🌳"}
                   </div>
                 )}
                 {player && (
-                  <div
-                    className="absolute inset-0 flex items-center justify-center text-2xl pointer-events-none"
-                    style={{ zIndex: 1 }}
-                  >
-                    🧑‍🌾
-                  </div>
+                  <>
+                    <div
+                      className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm bg-white px-1 rounded border flex items-center"
+                      style={{ zIndex: 1 }}
+                    >
+                      <span>{player.woodBalance.toString()}</span>
+                      <span className="ml-0.5">🪵</span>
+                    </div>
+                    <div
+                      className="absolute inset-0 flex items-center justify-center text-2xl"
+                      style={{ zIndex: 1 }}
+                    >
+                      🧑‍🌾
+                    </div>
+                  </>
                 )}
               </div>
             </div>

@@ -11,7 +11,6 @@ import { Agent } from "./Agent";
 import { useAccount } from "wagmi";
 import { useRecords } from "@latticexyz/stash/react";
 import { Address } from "viem";
-import { WoodBalance } from "./WoodBalance";
 import { usePreventScroll } from "./utils/usePreventScroll";
 
 export function Game() {
@@ -69,7 +68,6 @@ export function Game() {
       <GameMap />
       <Spawn onMove={onMove} />
       {currentPlayer ? <Agent /> : null}
-      {currentPlayer ? <WoodBalance /> : null}
     </div>
   );
 }
