@@ -3,6 +3,23 @@ import mudConfig from "contracts/mud.config";
 import { useTiles } from "./utils/useTiles";
 import { stash } from "../mud/stash";
 import { useGridDimensions } from "./utils/useGridDimensions";
+import {
+  Address,
+  encodeAbiParameters,
+  hexToBigInt,
+  keccak256,
+  parseAbiParameters,
+} from "viem";
+
+const EMOJIS = ["🧑‍🌾", "👩‍🌾", "👨‍🌾"];
+
+function getEmoji(address: Address) {
+  const hash = keccak256(
+    encodeAbiParameters(parseAbiParameters("address"), [address])
+  );
+
+  return EMOJIS[Number(hexToBigInt(hash) % 3n)];
+}
 
 export function GameMap() {
   const players = useRecords({ stash, table: mudConfig.tables.app__Player });
@@ -59,7 +76,7 @@ export function GameMap() {
                       className="absolute inset-0 flex items-center justify-center text-2xl"
                       style={{ zIndex: 1 }}
                     >
-                      🧑‍🌾
+                      {getEmoji(player.account)}
                     </div>
                   </>
                 )}
