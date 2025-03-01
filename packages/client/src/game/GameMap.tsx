@@ -29,14 +29,8 @@ export function GameMap() {
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div
-        className="inline-grid bg-lime-500 relative overflow-hidden"
+        className="inline-grid bg-lime-500 relative overflow-hidden bg-[linear-gradient(to_right,rgba(75,85,99,0.4)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,85,99,0.4)_1px,transparent_1px)] bg-[length:2rem_2rem] bg-[0_0]"
         style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(75, 85, 99, 0.4) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(75, 85, 99, 0.4) 1px, transparent 1px)
-          `,
-          backgroundSize: "2rem 2rem",
-          backgroundPosition: "0 0",
           width: `${xTiles * 2}rem`,
           height: `${yTiles * 2}rem`,
         }}
@@ -64,21 +58,15 @@ export function GameMap() {
                   </div>
                 )}
                 {player && (
-                  <>
-                    <div
-                      className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm bg-white px-1 rounded border flex items-center"
-                      style={{ zIndex: 1 }}
-                    >
+                  <div>
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm bg-white px-1 rounded border flex items-center z-10">
                       <span>{player.woodBalance.toString()}</span>
                       <span className="ml-0.5">🪵</span>
                     </div>
-                    <div
-                      className="absolute inset-0 flex items-center justify-center text-2xl"
-                      style={{ zIndex: 1 }}
-                    >
+                    <div className="absolute inset-0 flex items-center justify-center text-2xl z-10">
                       {getEmoji(player.account)}
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
