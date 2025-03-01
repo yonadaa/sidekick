@@ -50,18 +50,15 @@ function StateDisplay({ state, output, hash }: StateDisplayProps) {
       bodyContent: React.ReactNode
     ) => (
       <div>
+        <div className="p-2 border-2 h-64 overflow-y-auto whitespace-pre-line">
+          {bodyContent}
+        </div>
         <div className="flex justify-between p-2 border-2">
           <div className="flex">
             <div className="flex">{callDisplay}</div>
             <CheckCheckIcon className={`ml-2 w-4 ${checkIconColor}`} />
           </div>
           {hashDisplay}
-        </div>
-        <div
-          className="p-2 border-2 h-48 overflow-y-auto"
-          style={{ whiteSpace: "pre-line" }}
-        >
-          {bodyContent}
         </div>
       </div>
     );
