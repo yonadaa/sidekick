@@ -1,5 +1,5 @@
 {
-  "name": "onchain-gamer",
+  "name": "sidekick",
   "private": true,
   "scripts": {
     "build": "pnpm recursive run build",
