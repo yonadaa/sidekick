@@ -41,15 +41,19 @@ export function GameMap() {
               }}
             >
               <div className="flex flex-wrap gap-1 items-center justify-center relative">
-                {player ? (
-                  <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none">
-                    🧑‍🌾
-                  </div>
-                ) : tree ? (
+                {tree && (
                   <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none">
                     {tree.harvested ? "🍂" : "🌳"}
                   </div>
-                ) : null}
+                )}
+                {player && (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center text-2xl pointer-events-none"
+                    style={{ zIndex: 1 }}
+                  >
+                    🧑‍🌾
+                  </div>
+                )}
               </div>
             </div>
           );
