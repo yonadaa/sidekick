@@ -29,10 +29,10 @@ export function GameMap() {
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div
-        className="inline-grid bg-lime-500 relative overflow-hidden bg-[linear-gradient(to_right,rgba(75,85,99,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,85,99,0.2)_1px,transparent_1px)] bg-[length:2rem_2rem] bg-[0_0]"
+        className="inline-grid bg-lime-500 relative overflow-hidden bg-[linear-gradient(to_right,rgba(75,85,99,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,85,99,0.2)_1px,transparent_1px)] bg-[length:3rem_3rem] bg-[0_0]"
         style={{
-          width: `${xTiles * 2}rem`,
-          height: `${yTiles * 2}rem`,
+          width: `${xTiles * 3}rem`,
+          height: `${yTiles * 3}rem`,
         }}
       >
         {tiles.map((tile) => {
@@ -45,7 +45,7 @@ export function GameMap() {
           return (
             <div
               key={`${x},${y}`}
-              className="w-8 h-8 flex items-center justify-center"
+              className="w-12 h-12 flex items-center justify-center"
               style={{
                 gridColumn: x + Math.floor(xTiles / 2) + 1,
                 gridRow: Math.floor(yTiles / 2) - y,
@@ -53,8 +53,10 @@ export function GameMap() {
             >
               <div className="relative w-full h-full">
                 {tree && (
-                  <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none">
-                    {tree.harvested ? "🍂" : "🌳"}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className={tree.harvested ? "text-2xl" : "text-5xl"}>
+                      {tree.harvested ? "🍂" : "🌳"}
+                    </span>
                   </div>
                 )}
                 {player && (
