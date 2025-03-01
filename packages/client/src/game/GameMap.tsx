@@ -29,7 +29,7 @@ export function GameMap() {
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div
-        className="inline-grid bg-lime-500 relative overflow-hidden bg-[linear-gradient(to_right,rgba(75,85,99,0.4)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,85,99,0.4)_1px,transparent_1px)] bg-[length:2rem_2rem] bg-[0_0]"
+        className="inline-grid bg-lime-500 relative overflow-hidden bg-[linear-gradient(to_right,rgba(75,85,99,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,85,99,0.2)_1px,transparent_1px)] bg-[length:2rem_2rem] bg-[0_0]"
         style={{
           width: `${xTiles * 2}rem`,
           height: `${yTiles * 2}rem`,
