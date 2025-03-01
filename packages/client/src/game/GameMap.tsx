@@ -3,6 +3,7 @@ import mudConfig from "contracts/mud.config";
 import { useTiles } from "./utils/useTiles";
 import { stash } from "../mud/stash";
 import { useGridDimensions } from "./utils/useGridDimensions";
+import { useAccount } from "wagmi";
 import {
   Address,
   encodeAbiParameters,
@@ -36,6 +37,7 @@ export function GameMap() {
   const players = useRecords({ stash, table: mudConfig.tables.app__Player });
   const { xTiles, yTiles } = useGridDimensions();
   const tiles = useTiles();
+  const { address: userAddress } = useAccount();
 
   return (
     <div className="w-full h-screen flex items-center justify-center">
@@ -52,6 +54,9 @@ export function GameMap() {
           const player = players.find(
             (player) => player.x === x && player.y === y
           );
+
+          const isCurrentPlayer =
+            player?.account.toLowerCase() === userAddress?.toLowerCase();
 
           return (
             <div
@@ -74,7 +79,11 @@ export function GameMap() {
                   <div>
                     <div className="absolute inset-0 flex items-center justify-center text-2xl">
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center"
+                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform ${
+                          isCurrentPlayer
+                            ? "scale-110 ring-1 ring-white ring-offset-2 ring-offset-lime-500 shadow-lg"
+                            : ""
+                        }`}
                         style={{
                           backgroundColor: getPlayerColor(player.account),
                         }}
