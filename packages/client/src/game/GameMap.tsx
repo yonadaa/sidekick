@@ -20,9 +20,19 @@ function getPlayerColor(address: Address) {
     encodeAbiParameters(parseAbiParameters("address"), [address])
   );
 
-  // Use the hash to generate HSL color values
-  const hue = Number(hexToBigInt(hash) % 360n); // 0-359 degrees
-  return `hsl(${hue}, 70%, 65%)`; // Fixed saturation and lightness for good visibility
+  // Simple array of colors that contrast well with the grass
+  const colors = [
+    "hsl(350, 70%, 65%)", // Pink
+    "hsl(200, 70%, 65%)", // Blue
+    "hsl(280, 70%, 65%)", // Purple
+    "hsl(15, 70%, 65%)", // Orange
+    "hsl(320, 70%, 65%)", // Magenta
+    "hsl(240, 70%, 65%)", // Indigo
+    "hsl(0, 70%, 65%)", // Red
+    "hsl(180, 70%, 65%)", // Cyan
+  ];
+
+  return colors[Number(hexToBigInt(hash) % BigInt(colors.length))];
 }
 
 function getEmoji(address: Address) {
