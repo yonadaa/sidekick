@@ -1,5 +1,5 @@
 import { Chain, http, webSocket } from "viem";
-import { anvil } from "viem/chains";
+import { anvil, base } from "viem/chains";
 import { createWagmiConfig } from "@latticexyz/entrykit/internal";
 import { rhodolite, garnet, redstone } from "@latticexyz/common/chains";
 import { chainId } from "./common";
@@ -8,6 +8,15 @@ export const chains = [
   redstone,
   garnet,
   rhodolite,
+  {
+    ...base,
+    rpcUrls: {
+      ...base.rpcUrls,
+      bundler: {
+        http: [import.meta.env.VITE_BASE_RPC_URL],
+      },
+    },
+  },
   {
     ...anvil,
     contracts: {
@@ -31,6 +40,7 @@ export const transports = {
   [garnet.id]: http(),
   [rhodolite.id]: http(),
   [redstone.id]: http(),
+  [base.id]: http(),
 } as const;
 
 export const wagmiConfig = createWagmiConfig({
@@ -45,5 +55,6 @@ export const wagmiConfig = createWagmiConfig({
     [garnet.id]: 2000,
     [rhodolite.id]: 2000,
     [redstone.id]: 2000,
+    [base.id]: 2000,
   },
 });
