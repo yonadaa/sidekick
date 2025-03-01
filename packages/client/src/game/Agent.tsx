@@ -115,7 +115,7 @@ function StateDisplay({ state, output, hash }: StateDisplayProps) {
 }
 
 export function Agent() {
-  const [goal, setGoal] = useState("Move towards the closest tree.");
+  const [goal, setGoal] = useState("");
   const [state, setState] = useState(State.Empty);
   const [output, setOutput] = useState<Output>();
   const [hash, setHash] = useState<Hex>();
@@ -175,6 +175,7 @@ export function Agent() {
         <input
           className="flex-grow border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-800 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed"
           type="text"
+          placeholder="Enter a goal..."
           disabled={
             started ||
             state === State.Thinking ||
