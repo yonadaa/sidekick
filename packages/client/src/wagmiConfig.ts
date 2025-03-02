@@ -22,7 +22,7 @@ export const chains = [
     contracts: {
       ...anvil.contracts,
       paymaster: {
-        address: "0xf03E61E7421c43D9068Ca562882E98d1be0a6b6e",
+        address: "0x2FAEB0760D4230Ef2aC21496Bb4F0b47D634FD4c",
       },
     },
     blockExplorers: {
