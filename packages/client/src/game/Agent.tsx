@@ -168,9 +168,12 @@ export function Agent() {
 
   return (
     <div className="absolute left-0 top-0 flex flex-col m-2 border-2 w-96 bg-white z-10">
+      <h2 className="text-center py-2 font-semibold text-xl border-b-2 font-mono bg-gray-200 border-gray-200">
+        Sidekick 🎮
+      </h2>
       <div className="flex flex-row">
         <input
-          className="flex-grow border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-colors duration-200 bg-white text-gray-800 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed"
+          className="flex-grow border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-colors duration-200 bg-white text-lg text-gray-800 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed"
           type="text"
           placeholder="Enter a goal..."
           disabled={
