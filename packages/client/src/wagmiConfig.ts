@@ -16,15 +16,15 @@ export const chains = [
         http: [import.meta.env.VITE_BASE_RPC_URL],
       },
     },
-  },
-  {
-    ...anvil,
     contracts: {
-      ...anvil.contracts,
+      ...base.contracts,
       paymaster: {
         address: "0x2FAEB0760D4230Ef2aC21496Bb4F0b47D634FD4c",
       },
     },
+  },
+  {
+    ...anvil,
     blockExplorers: {
       default: {} as never,
       worldsExplorer: {
