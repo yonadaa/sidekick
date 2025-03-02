@@ -25,6 +25,12 @@ export const chains = [
   },
   {
     ...anvil,
+    contracts: {
+      ...anvil.contracts,
+      paymaster: {
+        address: "0xf03E61E7421c43D9068Ca562882E98d1be0a6b6e",
+      },
+    },
     blockExplorers: {
       default: {} as never,
       worldsExplorer: {
