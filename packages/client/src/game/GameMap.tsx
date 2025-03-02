@@ -91,7 +91,7 @@ export function GameMap() {
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform ${
                           isCurrentPlayer
-                            ? "scale-110 ring-1 ring-white ring-offset-2 ring-offset-lime-500 shadow-lg"
+                            ? "ring-1 ring-white ring-offset-2 ring-offset-lime-500 shadow-lg"
                             : ""
                         }`}
                         style={{
