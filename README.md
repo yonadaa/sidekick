@@ -1,9 +1,9 @@
 # Sidekick
 
-Your AI agent for playing onchain games:
+An AI assistant for playing onchain games.
 
-- Fully autonomous. Give Sidekick a goal in natural language, and it will continuously reason and send transactions without any further intervention.
-- Precise control. Sidekick runs in the game client, so you can stop and start it at will, generate individual transactions, or just control the player yourself.
-- Minimal setup. Simply provide a contract's source code and storage - Sidekick figures out how to accomplish your goal.
+Sidekick is fully autonomous - give it a contract address and goal, and it will continuously reason and send transactions without further intervention.
+It runs in the browser, so you can stop and start it at will, generate individual moves, or just control the player yourself.
 
-https://github.com/user-attachments/assets/10b486b3-f0b2-4bdd-a666-c3b3fb0a6434
+https://github.com/user-attachments/assets/9e0e8495-5f31-4e47-a9c6-7f5e6267b45e
+
